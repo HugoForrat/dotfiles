@@ -1,0 +1,16 @@
+theme = "solarized-dark"
+icons = "awesome"
+
+[[block]]
+block = "music"
+player = "spotify"
+max_width = 35
+buttons = ["prev", "play", "next"]
+
+[[block]]
+block = "sound"
+
+[[block]]
+block = "time"
+interval = 1
+format = "%a %d-%m-%Y     %T"
