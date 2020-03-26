@@ -7,7 +7,7 @@ cd
 mkdir .vim; cd .vim
 
 # We download our vimrc
-curl https://raw.githubusercontent.com/HugoForrat/Dotfiles-scripts/master/dotfiles/vimrc > vimrc
+curl https://raw.githubusercontent.com/HugoForrat/dotfiles/master/vimrc > vimrc
 
 # We download our colorscheme
 mkdir colors
