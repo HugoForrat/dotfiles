@@ -39,6 +39,8 @@ bindsym XF86AudioLowerVolume exec --no-startup-id pactl set-sink-volume @DEFAULT
 bindsym XF86AudioMute exec --no-startup-id pactl set-sink-mute @DEFAULT_SINK@ toggle && $refresh_i3status
 # bindsym XF86AudioMicMute exec --no-startup-id pactl set-source-mute @DEFAULT_SOURCE@ toggle && $refresh_i3status
 
+bindsym $mod+Escape exec i3lock --image=$(ls /home/hugo/WP/*.png | shuf | sed 1q)
+
 # Use Mouse+$mod to drag floating windows to their wanted position
 floating_modifier $mod
 
@@ -126,7 +128,8 @@ bindsym $mod+agrave workspace 10
 bindsym $mod+Shift+1 move container to workspace 1
 bindsym $mod+Shift+eacute move container to workspace 2
 bindsym $mod+Shift+3 move container to workspace 3
-bindsym $mod+Shift+4 move container to workspace 4
+# bindsym $mod+Shift+4 move container to workspace 4
+bindsym F4 move container to workspace 4
 bindsym $mod+Shift+5 move container to workspace 5
 bindsym $mod+Shift+6 move container to workspace 6
 bindsym $mod+Shift+egrave move container to workspace 7
