@@ -249,3 +249,4 @@ autocmd FileType gitcommit setlocal spelllang=en
 
 " ALE
 let g:ale_sh_shellcheck_executable = "/usr/bin/shellcheck"
+let g:ale_linters = {'rust': ['cargo']}

@@ -1,0 +1,27 @@
+alias c='clear'
+
+alias :q='exit'
+alias :wq='exit'
+
+alias ls='ls --color=auto'
+
+alias sx='sxiv'
+
+alias create_py_env='python -m venv env'
+alias activate_py_env='source env/bin/activate'
+
+alias clip='xclip -selection clipboard'
+
+alias v='vim'
+alias :h='vim_help'
+
+alias first="awk '{print \$1}'"
+alias awklast="awk '{print \$NF}'"
+
+alias xprop="xprop | rg '\w'"
+alias youtube-dl='longstuff youtube-dl'
+alias curl='longstuff curl'
+alias du='longstuff du'
+
+alias spotifyplay="dbus-send --print-reply --dest=org.mpris.MediaPlayer2.spotify /org/mpris/MediaPlayer2 org.mpris.MediaPlayer2.Player.Play"
+alias spotifypause="dbus-send --print-reply --dest=org.mpris.MediaPlayer2.spotify /org/mpris/MediaPlayer2 org.mpris.MediaPlayer2.Player.Pause"
