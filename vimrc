@@ -89,7 +89,8 @@ set gdefault
 "s/x/y/g substitutes for the first instance only
 
 " Changing the location of the .viminfo file
-set viminfo+=n~/.vim/.viminfo
+" set viminfofile="/home/hugo/.hugo/.vim/viminfo"
+set viminfo+=n~/.vim/viminfo
 
 " Fuzzy finder
 set rtp+=~/.fzf
@@ -250,3 +251,13 @@ autocmd FileType gitcommit setlocal spelllang=en
 " ALE
 let g:ale_sh_shellcheck_executable = "/usr/bin/shellcheck"
 let g:ale_linters = {'rust': ['cargo']}
+
+" Crutch for the lack of clipboard support
+if !has('clipboard')
+	function! Clip()
+		let tmpfile = tempname()
+		silent! execute "write " . tmpfile
+		silent! execute '!xclip -selection clipboard %'
+	endfunction
+	nnoremap <F1> :call Clip()<cr>
+end
