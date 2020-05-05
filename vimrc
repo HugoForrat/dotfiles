@@ -116,6 +116,10 @@ nnoremap U <Nop>
 let g:netrw_liststyle= 3 " Open netrw in tree mode
 let g:netrw_banner= 0 " Remove the banner
 let g:netrw_winsize= 25
+let g:netrw_browsex_viewer= "/usr/bin/firefox" " Bug au niveau de Vim/Netrw : https://github.com/vim/vim/issues/4738
+" En attendant un fix... pollue le répertoire mais on est pas à ça près...
+" From : https://stackoverflow.com/questions/9458294/open-url-under-cursor-in-vim-with-browser/20177492#20177492
+nmap gx yiW:!firefox <cWORD><CR> <C-r>" & <CR><CR>
 
 " Let escape go in Terminal Normal mode
 " (use i to go back into Terminal mode)
@@ -261,3 +265,72 @@ if !has('clipboard')
 	endfunction
 	nnoremap <F1> :call Clip()<cr>
 end
+
+" Redirect the output of a Vim or external command into a scratch buffer
+" By romainl
+" https://gist.github.com/romainl/eae0a260ab9c135390c30cd370c20cd7
+function! Redir(cmd, rng, start, end)
+	for win in range(1, winnr('$'))
+		if getwinvar(win, 'scratch')
+			execute win . 'windo close'
+		endif
+	endfor
+	if a:cmd =~ '^!'
+		let cmd = a:cmd =~' %'
+			\ ? matchstr(substitute(a:cmd, ' %', ' ' . expand('%:p'), ''), '^!\zs.*')
+			\ : matchstr(a:cmd, '^!\zs.*')
+		if a:rng == 0
+			let output = systemlist(cmd)
+		else
+			let joined_lines = join(getline(a:start, a:end), '\n')
+			let cleaned_lines = substitute(shellescape(joined_lines), "'\\\\''", "\\\\'", 'g')
+			let output = systemlist(cmd . " <<< $" . cleaned_lines)
+		endif
+	else
+		redir => output
+		execute a:cmd
+		redir END
+		let output = split(output, "\n")
+	endif
+	vnew
+	let w:scratch = 1
+	setlocal buftype=nofile bufhidden=wipe nobuflisted noswapfile
+	call setline(1, output)
+endfunction
+
+command! -nargs=1 -complete=command -bar -range Redir silent call Redir(<q-args>, <range>, <line1>, <line2>)
+
+" Vimwiki
+let vw_syntax = {'python': 'python', 'c': 'c', 'c++': 'cpp'}
+let g:vimwiki_list = [{
+			\ 'path': '~/.vimwiki/', 
+			\ 'nested_syntaxes': vw_syntax,
+			\ 'path_html': '~/.vimwiki/auto_html/',
+			\ 'template_path': '~/.vimwiki/.templates/',
+			\ 'template_default': 'default',
+			\ 'template_ext': '.html',
+			\ 'vimwiki_hl_headers': 1,
+			\ }]
+
+command! Vw VimwikiIndex
+" autocmd filetype vimwiki setlocal textwidth=99
+let g:vimwiki_url_maxsave=5
+" TODO : mettre les bonnes abbréviations pour les bons cours
+autocmd BufEnter /home/hugo/TUD/SW_fault_tolerance/* iabbrev ft fault tolerance
+autocmd BufEnter /home/hugo/TUD/SW_fault_tolerance/* iabbrev sw software
+autocmd BufEnter /home/hugo/TUD/SW_fault_tolerance/* iabbrev hw hardware
+autocmd BufEnter /home/hugo/TUD/SW_fault_tolerance/* iabbrev e2e end-to-end
+autocmd BufEnter /home/hugo/TUD/SW_fault_tolerance/* iabbrev le link encryption
+autocmd BufEnter /home/hugo/TUD/SW_fault_tolerance/* iabbrev nw network
+autocmd BufEnter /home/hugo/TUD/SW_fault_tolerance/* iabbrev nws networks
+
+let g:vimwiki_global_ext = 0
+
+" function! AutoFilename()
+" 	let line=getline('.')
+" endfunction
+
+
+" autocmd BufWritePost vimrc source $MYVIMRC
+cnoremap <C-j> <Down>
+cnoremap <C-k> <Up>
