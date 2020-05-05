@@ -7,6 +7,8 @@ hide_edge_borders smart
 client.focused          #8a0e06 #285577 #ffffff #8a0e06   #8a0e06
 # client.focused          #4c7899 #285577 #ffffff #1a3b54   #285577
 
+focus_wrapping no
+
 # Font for window titles. Will also be used by the bar unless a different font
 # is used in the bar {} block below.
 font pango:monospace 8
@@ -30,7 +32,7 @@ exec --no-startup-id picom
 exec --no-startup-id nm-applet --no-agent
 
 # Background
-exec --no-startup-id feh --randomize --bg-scale ~/WP/*
+exec --no-startup-id /home/hugo/.local/bin/fehwrapper
 
 # Use pactl to adjust volume in PulseAudio.
 set $refresh_i3status killall -SIGUSR1 i3status
@@ -40,7 +42,6 @@ bindsym XF86AudioMute exec --no-startup-id pactl set-sink-mute @DEFAULT_SINK@ to
 # bindsym XF86AudioMicMute exec --no-startup-id pactl set-source-mute @DEFAULT_SOURCE@ toggle && $refresh_i3status
 #
 
-bindsym XF86AudioPlay exec dbus-send --print-reply --dest=org.mpris.MediaPlayer2.spotify /org/mpris/MediaPlayer2 org.mpris.MediaPlayer2.Player.PlayPause
 
 
 bindsym $mod+Escape exec i3lock --image=$(ls /home/hugo/WP/*.png | shuf | sed 1q)
@@ -230,3 +231,6 @@ for_window [class="Spotify"] resize set 1184 719
 for_window [class="Spotify"] move scratchpad
 
 bindsym $mod+u scratchpad show; move position center
+bindsym XF86AudioPlay exec dbus-send --print-reply --dest=org.mpris.MediaPlayer2.spotify /org/mpris/MediaPlayer2 org.mpris.MediaPlayer2.Player.PlayPause
+bindsym XF86AudioPrev exec dbus-send --print-reply --dest=org.mpris.MediaPlayer2.spotify /org/mpris/MediaPlayer2 org.mpris.MediaPlayer2.Player.Previous
+bindsym XF86AudioNext exec dbus-send --print-reply --dest=org.mpris.MediaPlayer2.spotify /org/mpris/MediaPlayer2 org.mpris.MediaPlayer2.Player.Next

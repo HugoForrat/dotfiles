@@ -64,7 +64,10 @@ zle -N down-line-or-beginning-search
 # Get elements of an previous command
 bindkey -- "^Y" insert-last-word
 
-export VISUAL=vim
+# autoload -Uz push-line-or-edit
+# zle -N push-line-or-edit
+bindkey -- "^A" push-line-or-edit
+
 autoload -Uz edit-command-line
 zle -N edit-command-line
 bindkey -- "^X^E" edit-command-line
