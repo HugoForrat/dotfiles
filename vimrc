@@ -173,10 +173,10 @@ autocmd BufNewFile *.py 0put ='#!/usr/bin/env python3'
 
 " Remapping for C
 autocmd FileType c inoremap <buffer> ,m int main(int argc, char* argv[]){<Enter>}<Esc>O
-autocmd FileType c inoremap <buffer> " ""<Left>
-autocmd FileType c inoremap <buffer> ' ''<Left>
-autocmd FileType c inoremap <buffer> ( ()<Left>
-autocmd FileType c inoremap <buffer> {<Enter> {<Enter>}<Esc>O
+" autocmd FileType c inoremap <buffer> " ""<Left>
+" autocmd FileType c inoremap <buffer> ' ''<Left>
+" autocmd FileType c inoremap <buffer> ( ()<Left>
+" autocmd FileType c inoremap <buffer> {<Enter> {<Enter>}<Esc>O
 
 " Remapping for C++
 function! CppInit()
@@ -195,7 +195,7 @@ autocmd FileType cpp inoremap <buffer> ' ''<Left>
 autocmd FileType cpp inoremap <buffer> ( ()<Left>
 autocmd FileType cpp inoremap <buffer> {<Enter> {<Enter>}<Esc>O
 autocmd FileType cpp iabbrev <buffer> s_ size_t
-autocmd FileType cpp inoremap <buffer> t- this->
+" autocmd FileType cpp inoremap <buffer> t- this->
 
 " Python specifics
 autocmd FileType python inoremap <buffer> " ""<Left>
@@ -217,36 +217,6 @@ let g:rust_fold = 1
 autocmd BufWritePost *.rs :silent! exec "!rusty-tags vi --quiet --start-dir=" . expand('%:p:h') . "&" | redraw!
 autocmd BufRead *.rs :setlocal tags=./rusty-tags.vi;/
 autocmd FileType rust setlocal tags+=rusty-tags.vi
-autocmd FileType rust nnoremap <buffer> ,m ifn main() {}<Left><cr><Esc>
-autocmd FileType rust inoremap <buffer> {<Enter> {<Enter>}<Esc>O
-autocmd FileType rust inoremap <buffer> } {}
-autocmd FileType rust inoremap <buffer> ( ()<Left>
-autocmd FileType rust inoremap <buffer> ) ()
-autocmd FileType rust inoremap <buffer> " ""<Left>
-autocmd FileType rust inoremap <buffer> < <><Left>
-autocmd FileType rust nnoremap zz ?^\s*fn <cr>Vf{%:fo<cr>
-
-" Run 'cargo check' and open the quickfix window only if it isn't empty
-function! CheckRustAndQuickFix()
-	write
-	execute "normal! :make check --quiet\<cr>"
-	let qflen = getqflist({'size' : 1})['size']
-	if qflen != 0
-		copen
-	endif
-endfunction
-" autocmd FileType rust nnoremap <buffer> <cr> :call CheckRustAndQuickFix()<cr>
-
-function! CargoOrRustc()
-	if filereadable("Cargo.toml") || filereadable("../Cargo.toml")
-		set makeprg=cargo
-		nnoremap <buffer> <cr> :call CheckRustAndQuickFix()<cr>
-	else
-		set makeprg=rustc
-		nnoremap <buffer> <cr> :make<cr>
-	endif
-endfunction
-autocmd FileType rust call CargoOrRustc()
 
 " Use spell for gitcommit
 autocmd FileType gitcommit setlocal spell
@@ -329,7 +299,6 @@ let g:vimwiki_global_ext = 0
 " function! AutoFilename()
 " 	let line=getline('.')
 " endfunction
-
 
 " autocmd BufWritePost vimrc source $MYVIMRC
 cnoremap <C-j> <Down>
