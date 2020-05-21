@@ -213,6 +213,7 @@ bindsym $mod+x exec --no-startup-id firefox -private-window
 
 bindsym Print exec maim -s /home/hugo/Images/Screenshots/sc-$(date +"%Y-%m-%d_%H.%M.%S").png
 bindsym $mod+Print exec maim /home/hugo/Images/Screenshots/sc-$(date +"%Y-%m-%d_%H.%M.%S").png
+bindsym $mod+Control+Print exec maim -B --window=$(xdotool getwindowfocus) /home/hugo/Images/Screenshots/sc-$(date +"%Y-%m-%d_%H.%M.%S").png
 
 # Keys for the brightness
 # bindsym XF86MonBrightnessUp exec --no-startup-id sudo /home/hugo/Bash/inc_brightness

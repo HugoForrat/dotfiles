@@ -239,6 +239,8 @@ end
 " Redirect the output of a Vim or external command into a scratch buffer
 " By romainl
 " https://gist.github.com/romainl/eae0a260ab9c135390c30cd370c20cd7
+" (Crudely) Modified to open the output in a new split only if the current
+" buffer isn't empty
 function! Redir(cmd, rng, start, end)
 	for win in range(1, winnr('$'))
 		if getwinvar(win, 'scratch')
@@ -262,7 +264,9 @@ function! Redir(cmd, rng, start, end)
 		redir END
 		let output = split(output, "\n")
 	endif
-	vnew
+	if line('$') != 1 || getline(1) != ''
+		vnew
+	endif
 	let w:scratch = 1
 	setlocal buftype=nofile bufhidden=wipe nobuflisted noswapfile
 	call setline(1, output)
