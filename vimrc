@@ -188,7 +188,7 @@ function! CppInit()
 endfunction
 
 " TODO installer cscope
-autocmd BufRead,FileType cpp call CppInit()
+" autocmd BufRead,FileType cpp call CppInit()
 autocmd FileType cpp inoremap <buffer> ,m int main(int argc, char* argv[]){<Enter>}<Esc>O
 autocmd FileType cpp inoremap <buffer> " ""<Left>
 autocmd FileType cpp inoremap <buffer> ' ''<Left>
@@ -214,9 +214,9 @@ endfunction
 " Rust specifics
 let g:rust_fold = 1
 " autocmd FileType rust compiler cargo
-autocmd BufWritePost *.rs :silent! exec "!rusty-tags vi --quiet --start-dir=" . expand('%:p:h') . "&" | redraw!
-autocmd BufRead *.rs :setlocal tags=./rusty-tags.vi;/
-autocmd FileType rust setlocal tags+=rusty-tags.vi
+" autocmd BufWritePost *.rs :silent! exec "!rusty-tags vi --quiet --start-dir=" . expand('%:p:h') . "&" | redraw!
+" autocmd BufRead *.rs :setlocal tags=./rusty-tags.vi;/
+" autocmd FileType rust setlocal tags+=rusty-tags.vi
 
 " Use spell for gitcommit
 autocmd FileType gitcommit setlocal spell
