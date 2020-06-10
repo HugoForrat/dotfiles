@@ -121,3 +121,7 @@ source /home/hugo/.alias
 source /home/hugo/.fzf/fzf-tab/fzf-tab.plugin.zsh
 
 [ -f ~/.fzf.zsh ] && source ~/.fzf.zsh
+
+if [[ "$(tty)" = "/dev/tty1" ]]; then
+	pgrep i3 || startx
+fi
