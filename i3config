@@ -1,11 +1,11 @@
 
 # i3wm config file
 
-# ============================================== #
-#                                                #
-#              General Settings                  #
-#                                                #
-# ============================================== #
+# ============================== #
+#                                #
+#       General Settings         #
+#                                #
+# ============================== #
  
 set $mod Mod4
 default_border pixel 3
@@ -21,7 +21,7 @@ bar {
     font pango:DejaVu Sans Mono, FontAwesome 8
     position bottom
     status_command $HOME/i3status-rust/target/release/i3status-rs \
-				   $HOME/.config/i3/status.toml
+                   $HOME/.config/i3/status.toml
     colors {
         separator #666666
         background #222222
@@ -33,11 +33,11 @@ bar {
     }
 }
 
-# ============================================== #
-#                                                #
-#              i3 bindings                       #
-#                                                #
-# ============================================== #
+# ============================== #
+#                                #
+#       i3 bindings              #
+#                                #
+# ============================== #
 
 bindsym $mod+q kill
 bindsym $mod+h focus left
@@ -120,13 +120,14 @@ bindsym $mod+Control+l resize grow width 2 px or 2 ppt
 bindsym $mod+Shift+c reload
 bindsym $mod+Shift+r restart
 
-bindsym $mod+u scratchpad show; move position center # Spotify
+# Spotify
+bindsym $mod+u scratchpad show; move position center
 
-# ============================================== #
-#                                                #
-#              Starting programs                 #
-#                                                #
-# ============================================== #
+# ============================== #
+#                                #
+#       Starting programs        #
+#                                #
+# ============================== #
 
 exec --no-startup-id numlockx
 exec --no-startup-id unclutter --timeout 2 &
@@ -135,11 +136,11 @@ exec --no-startup-id nm-applet --no-agent
 exec --no-startup-id $HOME/.local/bin/fehwrapper
 exec --no-startup-id spotify
 
-# ============================================== #
-#                                                #
-#            Bindings to programs                #
-#                                                #
-# ============================================== #
+# ============================== #
+#                                #
+#     Bindings to programs       #
+#                                #
+# ============================== #
 
 bindsym $mod+d               exec dmenu_run
 bindsym $mod+Return          exec termite
@@ -149,13 +150,13 @@ bindsym $mod+x               exec --no-startup-id firefox -private-window
 bindsym Print                exec maim -s $HOME/Images/Screenshots/sc-$(date +"%Y-%m-%d_%H.%M.%S").png
 bindsym $mod+Print           exec maim $HOME/Images/Screenshots/sc-$(date +"%Y-%m-%d_%H.%M.%S").png
 bindsym $mod+Control+Print   exec maim -B --window=$(xdotool getwindowfocus) \
-								  $HOME/Images/Screenshots/sc-$(date +"%Y-%m-%d_%H.%M.%S").png
+                                  $HOME/Images/Screenshots/sc-$(date +"%Y-%m-%d_%H.%M.%S").png
 
 bindsym $mod+Escape          exec i3lock \ --image=$(ls $WPDIR/*.png | shuf | sed 1q)
 bindsym $mod+Shift+e         exec "i3-nagbar -t warning -m \
-								  'You pressed the exit shortcut. Do you really want to exit i3? \
-								  This will end your X session.' \
-								  -B 'Yes, exit i3' 'i3-msg exit'"
+                                  'You pressed the exit shortcut. Do you really want to exit i3? \
+                                  This will end your X session.' \
+                                  -B 'Yes, exit i3' 'i3-msg exit'"
 
 bindsym XF86AudioRaiseVolume exec --no-startup-id pactl set-sink-volume @DEFAULT_SINK@ +10%
 bindsym XF86AudioLowerVolume exec --no-startup-id pactl set-sink-volume @DEFAULT_SINK@ -10%
@@ -163,19 +164,19 @@ bindsym XF86AudioMute        exec --no-startup-id pactl set-sink-mute @DEFAULT_S
 bindsym XF86AudioMicMute     exec --no-startup-id pactl set-source-mute @DEFAULT_SOURCE@ toggle
 
 bindsym XF86AudioPlay        exec dbus-send --print-reply --dest=org.mpris.MediaPlayer2.spotify \
-							 /org/mpris/MediaPlayer2 org.mpris.MediaPlayer2.Player.PlayPause
+                             /org/mpris/MediaPlayer2 org.mpris.MediaPlayer2.Player.PlayPause
 
 bindsym XF86AudioPrev        exec dbus-send --print-reply --dest=org.mpris.MediaPlayer2.spotify \
-							 /org/mpris/MediaPlayer2 org.mpris.MediaPlayer2.Player.Previous
+                             /org/mpris/MediaPlayer2 org.mpris.MediaPlayer2.Player.Previous
 
 bindsym XF86AudioNext        exec dbus-send --print-reply --dest=org.mpris.MediaPlayer2.spotify \
-							 /org/mpris/MediaPlayer2 org.mpris.MediaPlayer2.Player.Next
+                             /org/mpris/MediaPlayer2 org.mpris.MediaPlayer2.Player.Next
 
-# ============================================== #
-#                                                #
-#            for_window specifics                #
-#                                                #
-# ============================================== #
+# ============================== #
+#                                #
+#     for_window specifics       #
+#                                #
+# ============================== #
 
 for_window [title="Hello"                ] floating enable; move position center
 for_window [class="Steam"                ] move container to workspace 10
