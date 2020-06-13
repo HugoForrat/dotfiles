@@ -1,4 +1,4 @@
-export PATH=$PATH:/home/hugo/.cargo/bin:/home/hugo/.local/bin
+export PATH=$PATH:$HOME/.cargo/bin:$HOME/.local/bin
 export VISUAL=vim
 export EDITOR=/usr/bin/vim
 
@@ -6,9 +6,11 @@ export EDITOR=/usr/bin/vim
 export LESSHISTFILE="-"
 
 # Move Nvidia cache elsewhere
-export __GL_SHADER_DISK_CACHE_PATH=/home/hugo/.cache/nv
+export __GL_SHADER_DISK_CACHE_PATH=$HOME/.cache/nv
 
 # Move Wine stuff
-export WINEPREFIX=/home/hugo/.cache/wine
+export WINEPREFIX=$HOME/.cache/wine
 
-export PYLINTHOME=/home/hugo/.local/share/pylint.d
+export PYLINTHOME=$HOME/.local/share/pylint.d
+
+export WPDIR=$HOME/.wallpapers
