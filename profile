@@ -15,7 +15,3 @@ export PYLINTHOME=$HOME/.local/share/pylint.d
 
 # Variables for personnal scripts
 export WPDIR=$HOME/.wallpapers
-export PYLINTHOME=/home/hugo/.local/share/pylint.d
-
-# Variables for personnal scripts
-export WPDIR=/home/hugo/.wallpapers
