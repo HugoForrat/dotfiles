@@ -9,6 +9,7 @@ buttons = ["prev", "play", "next"]
 
 [[block]]
 block = "sound"
+on_click = "pactl set-sink-mute @DEFAULT_SINK@ toggle"
 
 [[block]]
 block = "time"

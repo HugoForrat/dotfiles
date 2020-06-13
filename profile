@@ -12,3 +12,6 @@ export __GL_SHADER_DISK_CACHE_PATH=/home/hugo/.cache/nv
 export WINEPREFIX=/home/hugo/.cache/wine
 
 export PYLINTHOME=/home/hugo/.local/share/pylint.d
+
+# Variables for personnal scripts
+export WPDIR=/home/hugo/.wallpapers
