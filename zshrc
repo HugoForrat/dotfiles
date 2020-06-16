@@ -123,5 +123,5 @@ source /home/hugo/.fzf/fzf-tab/fzf-tab.plugin.zsh
 [ -f ~/.fzf.zsh ] && source ~/.fzf.zsh
 
 if [[ "$(tty)" = "/dev/tty1" ]]; then
-	pgrep i3 || startx >& ~/.xsession.log
+	pgrep dwm || startx >& ~/.xsession.log
 fi

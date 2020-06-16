@@ -152,7 +152,7 @@ bindsym $mod+Print           exec maim $HOME/Images/Screenshots/sc-$(date +"%Y-%
 bindsym $mod+Control+Print   exec maim -B --window=$(xdotool getwindowfocus) \
                                   $HOME/Images/Screenshots/sc-$(date +"%Y-%m-%d_%H.%M.%S").png
 
-bindsym $mod+Escape          exec i3lock \ --image=$(ls $WPDIR/*.png | shuf | sed 1q)
+bindsym $mod+Escape          exec i3lock --image=$(ls $WPDIR/*.png | shuf | sed 1q)
 bindsym $mod+Shift+e         exec "i3-nagbar -t warning -m \
                                   'You pressed the exit shortcut. Do you really want to exit i3? \
                                   This will end your X session.' \
@@ -161,7 +161,6 @@ bindsym $mod+Shift+e         exec "i3-nagbar -t warning -m \
 bindsym XF86AudioRaiseVolume exec --no-startup-id pactl set-sink-volume @DEFAULT_SINK@ +10%
 bindsym XF86AudioLowerVolume exec --no-startup-id pactl set-sink-volume @DEFAULT_SINK@ -10%
 bindsym XF86AudioMute        exec --no-startup-id pactl set-sink-mute @DEFAULT_SINK@ toggle
-bindsym XF86AudioMicMute     exec --no-startup-id pactl set-source-mute @DEFAULT_SOURCE@ toggle
 
 bindsym XF86AudioPlay        exec dbus-send --print-reply --dest=org.mpris.MediaPlayer2.spotify \
                              /org/mpris/MediaPlayer2 org.mpris.MediaPlayer2.Player.PlayPause
