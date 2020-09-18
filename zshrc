@@ -1,7 +1,7 @@
 bindkey -v
 
 autoload -Uz compinit promptinit
-compinit
+compinit -d $HOME/.cache/zcompdump
 promptinit
 
 # Arrow-key driven interface for auto-completion
@@ -59,7 +59,7 @@ zle -N down-line-or-beginning-search
 [[ -n "${key[Up]}"   ]] && bindkey -- "${key[Up]}"   up-line-or-beginning-search
 [[ -n "${key[Down]}" ]] && bindkey -- "${key[Down]}" down-line-or-beginning-search
 [[ -n "^K" ]] && bindkey -- "^K" up-line-or-beginning-search
-[[ -n "^J" ]] && bindkey -- "^J" up-line-or-beginning-search
+[[ -n "^J" ]] && bindkey -- "^J" down-line-or-beginning-search
 
 # Get elements of an previous command
 bindkey -- "^Y" insert-last-word
@@ -113,12 +113,12 @@ function regroup {
 	mv $(fd -t f -d 1 "$1") "$1"/
 }
 
-source /home/hugo/.profile
-source /home/hugo/.alias
+source $HOME/.profile
+source $HOME/.alias
 
 # fzf-tab from
 # https://github.com/Aloxaf/fzf-tab
-source /home/hugo/.fzf/fzf-tab/fzf-tab.plugin.zsh
+[[ -f $HOME/.fzf/fzf-tab/fzf-tab.plugin.zsh ]] && source $HOME/.fzf/fzf-tab/fzf-tab.plugin.zsh
 
 [ -f ~/.fzf.zsh ] && source ~/.fzf.zsh
 
