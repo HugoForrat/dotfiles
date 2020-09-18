@@ -1,0 +1,4 @@
+# mm  hh  DD  MM  W /path/progam [--option]...  ( W = weekday: 0-6 [Sun=0] )
+
+*/30 * * * * DISPLAY=:0 $HOME/.local/bin/fehwrapper
+*/30 * * * * $HOME/.local/bin/unf -f $HOME/Pictures/Screenshots/*
