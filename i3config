@@ -20,8 +20,8 @@ client.focused          #8a0e06 #285577 #ffffff #8a0e06   #8a0e06
 bar {
     font pango:DejaVu Sans Mono, FontAwesome 8
     position bottom
-    status_command $HOME/i3status-rust/target/release/i3status-rs \
-                   $HOME/.config/i3/status.toml
+    status_command $HOME/.local/bin/i3status-rs \
+                   $HOME/.config/i3/i3status-rs.toml
     colors {
         separator #666666
         background #222222
@@ -91,13 +91,17 @@ bindsym $mod+Shift+1 move container to workspace 1
 bindsym $mod+Shift+eacute move container to workspace 2
 bindsym $mod+Shift+3 move container to workspace 3
 bindsym $mod+Shift+4 move container to workspace 4
-bindsym F4 move container to workspace 4
 bindsym $mod+Shift+5 move container to workspace 5
 bindsym $mod+Shift+6 move container to workspace 6
 bindsym $mod+Shift+egrave move container to workspace 7
 bindsym $mod+Shift+8 move container to workspace 8
 bindsym $mod+Shift+ccedilla move container to workspace 9
 bindsym $mod+Shift+agrave move container to workspace 10
+
+bindsym $mod+Up move workspace to output up
+bindsym $mod+Down move workspace to output down
+bindsym $mod+Left move workspace to output left
+bindsym $mod+Right move workspace to output right
 
 # resize window
 mode "resize" {
@@ -121,7 +125,7 @@ bindsym $mod+Shift+c reload
 bindsym $mod+Shift+r restart
 
 # Spotify
-bindsym $mod+u scratchpad show; move position center
+bindsym $mod+u exec $HOME/.local/bin/scratchpadwrapper
 
 # ============================== #
 #                                #
@@ -135,6 +139,7 @@ exec --no-startup-id picom
 exec --no-startup-id nm-applet --no-agent
 exec --no-startup-id $HOME/.local/bin/fehwrapper
 exec --no-startup-id spotify
+exec --no-startup-id entr_Pictures
 
 # ============================== #
 #                                #
@@ -142,15 +147,15 @@ exec --no-startup-id spotify
 #                                #
 # ============================== #
 
-bindsym $mod+d               exec dmenu_run
+bindsym $mod+d               exec rofi -show run
 bindsym $mod+Return          exec termite
 bindsym $mod+w               exec --no-startup-id firefox
 bindsym $mod+x               exec --no-startup-id firefox -private-window
 
-bindsym Print                exec maim -s $HOME/Images/Screenshots/sc-$(date +"%Y-%m-%d_%H.%M.%S").png
-bindsym $mod+Print           exec maim $HOME/Images/Screenshots/sc-$(date +"%Y-%m-%d_%H.%M.%S").png
+bindsym Print                exec maim -s $HOME/Pictures/Screenshot/sc-$(date +"%Y-%m-%d_%H.%M.%S").png
+bindsym $mod+Print           exec maim $HOME/Pictures/Screenshot/sc-$(date +"%Y-%m-%d_%H.%M.%S").png
 bindsym $mod+Control+Print   exec maim -B --window=$(xdotool getwindowfocus) \
-                                  $HOME/Images/Screenshots/sc-$(date +"%Y-%m-%d_%H.%M.%S").png
+                                  $HOME/Pictures/Screenshot/sc-$(date +"%Y-%m-%d_%H.%M.%S").png
 
 bindsym $mod+Escape          exec i3lock --image=$(ls $WPDIR/*.png | shuf | sed 1q)
 bindsym $mod+Shift+e         exec "i3-nagbar -t warning -m \
@@ -177,6 +182,12 @@ bindsym XF86AudioNext        exec dbus-send --print-reply --dest=org.mpris.Media
 #                                #
 # ============================== #
 
+# xprop
+# WM_CLASS(STRING) = <instance>, <class>
+
+# Titanfall 2 fix.
+for_window [class="steam_app_1182480"    ] floating enable
+
 for_window [title="Hello"                ] floating enable; move position center
 for_window [class="Steam"                ] move container to workspace 10
 for_window [instance="Wallpaper scraper" ] move container to workspace 9
@@ -187,3 +198,7 @@ for_window [class="Spotify"              ] move scratchpad
 
 for_window [class="^firefox$" title="^Save Image$"] floating disable
 for_window [class="^firefox$" title="^Enter name of file to save to…$"] floating disable
+
+for_window [title="Android Emulator - Pixel_3a_API_30_x86:5554"] resize set width 576 
+
+for_window [class="kdeconnect.app"] floating enable

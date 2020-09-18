@@ -1,8 +1,8 @@
 #!/usr/bin/bash
 
-ln -s /home/hugo/.dotfiles/vimrc ~/.vim/vimrc
-ln -s /home/hugo/.dotfiles/termite.conf /home/hugo/.config/termite/config
-ln -s /home/hugo/.dotfiles/i3config /home/hugo/.config/i3/config
-ln -s /home/hugo/.dotfiles/i3status.toml /home/hugo/.config/i3/status.toml
-ln -s /home/hugo/.dotfiles/alias /home/hugo/.alias
-ln -sf /home/hugo/.dotfiles/profile /home/hugo/.profile
+ln -s $HOME/.dotfiles/vimrc ~/.vim/vimrc
+ln -s $HOME/.dotfiles/termite.conf $HOME/.config/termite/config
+ln -s $HOME/.dotfiles/i3config $HOME/.config/i3/config
+ln -s $HOME/.dotfiles/i3status.toml $HOME/.config/i3/status.toml
+ln -s $HOME/.dotfiles/alias $HOME/.alias
+ln -sf $HOME/.dotfiles/profile $HOME/.profile
