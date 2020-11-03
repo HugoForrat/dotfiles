@@ -80,7 +80,7 @@ function vim_and_clear {
 }
 
 function vim_help {
-	vim -c ":h $1 | only"
+	nvim -c ":h $1 | only"
 }
 
 # Snippet from https://sheerun.net/2014/03/21/how-to-boost-your-vim-productivity/
@@ -98,9 +98,12 @@ fancy-ctrl-z () {
 zle -N fancy-ctrl-z
 bindkey '^Z' fancy-ctrl-z
 
+# HISTORY
 HISTSIZE=1000
-SAVEHIST=2000
+SAVEHIST=10000
 HISTFILE=~/.history
+setopt HIST_IGNORE_ALL_DUPS
+setopt HIST_IGNORE_SPACE
 
 function start_counter {
 	date1=`date +%s`; while true; do
@@ -116,12 +119,38 @@ function regroup {
 source $HOME/.profile
 source $HOME/.alias
 
+
+# if [[ "$(tty)" = "/dev/tty1" ]]; then
+# 	pgrep dwm || startx >& ~/.xsession.log
+# fi
+
+# function ps_wrapper {
+# 	tmpfile=$(mktemp)
+# 	ps $@ > $tmpfile
+# 	head -n 1 $tmpfile >> /dev/tty
+# 	head -n 1 $tmpfile
+# 	cat $tmpfile
+# 	rm $tmpfile
+# }
+
+compdef _bt bt
+function _bt {
+	subcmds=('pods' 'speaker' 'disconnect')
+	_describe 'command' subcmds
+}
+
+function wiki2latex {
+  if [ $# != 1 ] && [ $# != 2 ]
+  then
+    exit
+  fi
+
+  pandoc -f vimwiki -t pdf --pdf-engine=xelatex "$1" -o "${2:-${1/wiki/pdf}}"
+
+}
+
+[ -f ~/.fzf/fzf.zsh ] && source ~/.fzf/fzf.zsh
+
 # fzf-tab from
 # https://github.com/Aloxaf/fzf-tab
 [[ -f $HOME/.fzf/fzf-tab/fzf-tab.plugin.zsh ]] && source $HOME/.fzf/fzf-tab/fzf-tab.plugin.zsh
-
-[ -f ~/.fzf.zsh ] && source ~/.fzf.zsh
-
-if [[ "$(tty)" = "/dev/tty1" ]]; then
-	pgrep dwm || startx >& ~/.xsession.log
-fi
