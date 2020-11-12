@@ -133,24 +133,16 @@ source $HOME/.alias
 # 	rm $tmpfile
 # }
 
+[ -f ~/.fzf/fzf.zsh ] && source ~/.fzf/fzf.zsh
+
+# Completion stuff
+
 compdef _bt bt
 function _bt {
 	subcmds=('pods' 'speaker' 'disconnect')
 	_describe 'command' subcmds
 }
 
-function wiki2latex {
-  if [ $# != 1 ] && [ $# != 2 ]
-  then
-    exit
-  fi
-
-  pandoc -f vimwiki -t pdf --pdf-engine=xelatex "$1" -o "${2:-${1/wiki/pdf}}"
-
-}
-
-[ -f ~/.fzf/fzf.zsh ] && source ~/.fzf/fzf.zsh
-
-# fzf-tab from
-# https://github.com/Aloxaf/fzf-tab
-[[ -f $HOME/.fzf/fzf-tab/fzf-tab.plugin.zsh ]] && source $HOME/.fzf/fzf-tab/fzf-tab.plugin.zsh
+setopt COMPLETE_ALIASES
+zstyle ':completion:*:*:vim:*:*files' ignored-patterns '*.o' '*.pdf' '*.mkv'
+zstyle ':completion:*:*:v:*:*files' ignored-patterns '*.o' '*.pdf' '*.mkv'
