@@ -144,5 +144,6 @@ function _bt {
 }
 
 setopt COMPLETE_ALIASES
-zstyle ':completion:*:*:vim:*:*files' ignored-patterns '*.o' '*.pdf' '*.mkv'
-zstyle ':completion:*:*:v:*:*files' ignored-patterns '*.o' '*.pdf' '*.mkv'
+binary_format=('*.o', '*.pdf', '*.mkv', '*.mp3', '*.mp4', '*.jpg', '*.png')
+zstyle ':completion:*:*:vim:*:*files' ignored-patterns $binary_format
+zstyle ':completion:*:*:v:*:*files' ignored-patterns $binary_format
