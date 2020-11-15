@@ -1,29 +1,38 @@
+# Aliases
 alias c='clear'
 
 alias :q='exit'
 alias :wq='exit'
 
-alias ls='ls --color=auto'
+alias ls='ls --color=auto --group-directories-first'
+alias info='info --vi-keys'
 alias less='less -R'
 
 alias sx='sxiv'
 
 alias create_py_env='python -m venv env'
 alias activate_py_env='source env/bin/activate'
+alias vim="nvim"
+alias v="nvim"
+alias vimdiff="nvim -d"
+
+alias draft='nvim -c "setlocal buftype=nofile bufhidden=wipe nobuflisted noswapfile"'
+
+alias :h='vim_help'
 
 alias clip='xclip -selection clipboard'
 alias sql='sqlite3'
 
-alias v='vim'
-alias :h='vim_help'
+alias py='python3'
 
 alias first="awk '{print \$1}'"
 alias awklast="awk '{print \$NF}'"
 
-alias xprop="xprop | rg '\w'"
-alias youtube-dl='longstuff youtube-dl'
-alias curl='longstuff curl'
-alias du='longstuff du'
+alias hdmi-in='xrandr --output HDMI-1 --auto --right-of eDP-1'
+alias hdmi-out='xrandr --output HDMI-1 --off'
+alias rotate-screen="xrandr --output eDP-1 --rotate"
+
+alias ssclip="xclip -selection clipboard <<< 'ß'"
 
 alias spotifyplay="dbus-send --print-reply --dest=org.mpris.MediaPlayer2.spotify /org/mpris/MediaPlayer2 org.mpris.MediaPlayer2.Player.Play"
 alias spotifypause="dbus-send --print-reply --dest=org.mpris.MediaPlayer2.spotify /org/mpris/MediaPlayer2 org.mpris.MediaPlayer2.Player.Pause"
