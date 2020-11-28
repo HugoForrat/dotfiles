@@ -105,6 +105,9 @@ HISTFILE=~/.history
 setopt HIST_IGNORE_ALL_DUPS
 setopt HIST_IGNORE_SPACE
 
+# GLOBBING
+setopt GLOBSTARSHORT
+
 function start_counter {
 	date1=`date +%s`; while true; do
 	echo -ne "$(date -u --date @$((`date +%s` - $date1)) +%H:%M:%S)\r";
@@ -116,13 +119,26 @@ function regroup {
 	mv $(fd -t f -d 1 "$1") "$1"/
 }
 
+mvln() {
+  realpathsrc=$(realpath $1)
+  mv -i $1 $2
+  if [ -d $2 ]
+  then
+    realpathdst=$(realpath $2)/$(basename $1)
+  else
+    realpathdst=$(realpath $2)
+  fi
+  ln -s $realpathdst $realpathsrc
+}
+
+
 source $HOME/.profile
 source $HOME/.alias
 
 
-# if [[ "$(tty)" = "/dev/tty1" ]]; then
-# 	pgrep dwm || startx >& ~/.xsession.log
-# fi
+if [[ "$(tty)" = "/dev/tty1" ]]; then
+	pgrep i3 || startx >& ~/.xsession.log
+fi
 
 # function ps_wrapper {
 # 	tmpfile=$(mktemp)
