@@ -1,26 +1,18 @@
-" ===== INSTALLED PLUGINS ===============
-" vim-surrond
-" tabular
-" traces.vim
-" vim-commentary
-" FZF
-" =======================================
-
 " Plugins
 call plug#begin('~/.config/nvim/vim-plug')
 Plug 'tpope/vim-commentary'
 Plug 'tpope/vim-surround'
 Plug 'markonm/traces.vim'
 Plug 'godlygeek/tabular'
-Plug 'dart-lang/dart-vim-plugin'
-Plug 'thosakwe/vim-flutter'
-Plug 'natebosch/vim-lsc'
-Plug 'natebosch/vim-lsc-dart'
+Plug 'tpope/vim-dispatch'
+Plug 'sirver/UltiSnips'
+Plug 'lervag/vimtex'
 call plug#end()
 
 " ------ General settings ------
 set nocompatible
-let mapleader = " " " Leader key
+" let mapleader = " " " Leader key
+let maplocalleader = "," " Leader key
 set history=10000 " Maximum value
 language C
 
@@ -32,32 +24,6 @@ nnoremap <Up> :cprevious<cr>
 
 " Open and close the quickfix window with the same key
 nnoremap <expr> ù len(filter(range(1, winnr('$')), 'getbufvar(winbufnr(v:val), "&buftype") == "quickfix"')) ? ":cclose<cr>" : ":copen<cr>" 
-
-" " Enables syntax highlighting by default.
-" if has("syntax")
-" 	syntax on
-" endif
-
-" " Load the indentation rules and plugins according to the detected filetype.
-" if has("autocmd")
-" 	filetype plugin indent on
-" endif
-
-" vim-lsc
-" let g:lsc_server_commands = {'dart': 'dart bin/cache/dart-sdk/bin/snapshots/analysis_server.dart.snapshot --lsp'}
-let g:lsc_auto_map = {'defaults': v:true, 'Completion': 'omnifunc'}
-
-" ALE
-" let g:ale_set_ballons = 1
-" let g:ale_c_parse_makefile = 1
-" let g:ale_cpp_ccls_init_options = {
-" 			\   'cache': {
-" 			\       'directory': '/tmp/ccls/cache'
-" 			\   }
-" 			\ }
-" 
-" let g:ale_completion_enabled = 1
-" let g:ale_completion_autoimport = 1
 
 set showcmd   " Show (partial) command in status line.
 set showmatch " Show matching brackets.
@@ -72,6 +38,7 @@ set wildmenu
 set hidden " Hide buffers when they are abandoned
 set autoindent " Copy indent from current line when starting a new line
 set autoread
+set wildignore=*.aux,*.log
 
 " Nvim options
 set nohlsearch
@@ -101,6 +68,8 @@ set shiftwidth=2
 " Move visual block
 vnoremap J :m '>+1<CR>gv=gv
 vnoremap K :m '<-2<CR>gv=gv
+
+vnoremap + "+y
 
 " Join in visual mode
 vnoremap <C-J> J
@@ -132,22 +101,20 @@ augroup mailcommand
 	autocmd BufEnter *.fr.* setlocal spelllang=fr
 	autocmd BufEnter *.de.* setlocal spelllang=de
 	autocmd BufEnter *.en.* setlocal spelllang=en
-	autocmd FileType mail nnoremap j gj
-	autocmd FileType mail nnoremap k gk
+	autocmd FileType mail nnoremap <buffer> j gj
+	autocmd FileType mail nnoremap <buffer> k gk
+  autocmd FileType mail nnoremap <buffer> <cr> vipgq
 	autocmd FileType mail setlocal nonumber norelativenumber
 	autocmd FileType mail setlocal foldcolumn=0 textwidth=80
 	autocmd FileType mail syntax match Comment "^\s*#.*$"
 	autocmd FileType mail syntax match GruvboxGreen "^\s*##.*$"
 	autocmd FileType mail iabbrev -- —
+	" autocmd FileType mail iabbrev .. ∙
 augroup END
 
 set gdefault 
 "s/x/y substitutes for the whole line
 "s/x/y/g substitutes for the first instance only
-
-" Changing the location of the .viminfo file
-" set viminfofile="/home/hugo/.hugo/.vim/viminfo"
-" set viminfo+=n~/.vim/viminfo
 
 " Fuzzy finder
 set rtp+=~/.fzf
@@ -177,10 +144,6 @@ let g:netrw_liststyle= 3 " Open netrw in tree mode
 let g:netrw_banner= 0 " Remove the banner
 let g:netrw_winsize= 25
 let g:netrw_browsex_viewer= "/usr/bin/firefox" " Bug au niveau de Vim/Netrw : https://github.com/vim/vim/issues/4738
-
-" En attendant un fix... pollue le répertoire mais on est pas à ça près...
-" From : https://stackoverflow.com/questions/9458294/open-url-under-cursor-in-vim-with-browser/20177492#20177492
-nmap gx yiW:!firefox <cWORD><CR> <C-r>" & <CR><CR>
 
 " Let escape go in Terminal Normal mode
 " (use i to go back into Terminal mode)
@@ -234,19 +197,30 @@ endif
 "  == LaTeX =
 " Tells vim to always expects LaTeX code (instead of plain tex code) when reading a .tex file
 let g:tex_flavor = "latex"
+" let g:tex_conceal = 'admg'
 
-" Create a template when creating a new .tex file
-" autocmd BufNewFile *.tex 0r ~/Latex/.template_latex
+function! ItemIfEnv()
+  let l:env_found = 0
+  for l:line in reverse(getline(1, line(".")))
+    if l:line =~ '^\s*\\end{itemize}' || l:line =~ '^\s*\\end{enumerate}' || l:line =~ '^\s*\\end{description}'
+      break
+    elseif l:line =~ '^\s*\\begin{itemize}' || l:line =~ '^\s*\\begin{enumerate}' || l:line =~ '^\s*\\begin{description}'
+      let l:env_found = 1
+      break
+    endif
+  endfor
+  return l:env_found
+endfunction
 
 " Remapping for LaTeX
 augroup latexgroup
 	autocmd!
-	autocmd FileType tex inoremap <buffer> ,li \begin{itemize}<Enter>\end{itemize}<Enter><++><Esc>kO\item<Space>
-	autocmd FileType tex inoremap <buffer> ,i \item<Space>
-	autocmd FileType tex inoremap <buffer> ,desc \begin{description}<Enter>\end{description}<Enter><++><Esc>kO\item[]<Space><++><Esc>F]i
-	autocmd FileType tex inoremap <buffer> ,di \item[]<Space><++><Esc>F]i
-	autocmd FileType tex setlocal makeprg=pdflatex
-	autocmd FileType tex nnoremap <buffer> <cr> :make<cr>
+  autocmd FileType tex let b:surround_101 = "\\(\r\\)"
+  autocmd FileType tex let b:surround_98 = "\\textbf{\r}"
+	autocmd BufEnter *.tex inoremap <buffer> <expr> <cr> ItemIfEnv() ? "\n\\item " : "\n"
+	autocmd BufEnter *.tex inoremap <buffer> <S-cr> <cr>
+	autocmd BufEnter *.tex nnoremap <buffer> <expr> o ItemIfEnv() ? "o\\item <Esc>==A" : "o"
+	" autocmd BufEnter *.tex set conceallevel=1
 augroup END
 
 " Shebangs
@@ -262,15 +236,7 @@ augroup cgroup
 	autocmd FileType c inoremap <buffer> ,m int main(int argc, char* argv[]){<Enter>}<Esc>O
 	autocmd FileType c nnoremap <buffer> <cr> :make<cr>
 	autocmd FileType c nnoremap <buffer> <F5> :make run<cr>
-	" autocmd FileType c let g:ale_enabled = 1
-	" autocmd FileType c let g:ale_completion_enabled = 1
-	" autocmd FileType c set omnifunc=ale#completion#OmniFunc
 augroup END
-
-" autocmd FileType c inoremap <buffer> " ""<Left>
-" autocmd FileType c inoremap <buffer> ' ''<Left>
-" autocmd FileType c inoremap <buffer> ( ()<Left>
-" autocmd FileType c inoremap <buffer> {<Enter> {<Enter>}<Esc>O
 
 " Remapping for C++
 function! CppInit()
@@ -281,13 +247,11 @@ function! CppInit()
 	endif
 endfunction
 
-" TODO installer cscope
 " autocmd BufRead,FileType cpp call CppInit()
 augroup cppgroup
 	autocmd!
 	autocmd FileType cpp inoremap <buffer> ,m int main(int argc, char* argv[]){<Enter>}<Esc>O
 	autocmd FileType cpp iabbrev <buffer> s_ size_t
-	" autocmd FileType cpp inoremap <buffer> t- this->
 augroup END
 
 " Python specifics
@@ -320,16 +284,6 @@ augroup gitcommitgroup
 	autocmd FileType gitcommit setlocal spell
 	autocmd FileType gitcommit setlocal spelllang=en
 augroup END
-
-" Crutch for the lack of clipboard support
-if !has('clipboard')
-	function! Clip()
-		let tmpfile = tempname()
-		silent! execute "write " . tmpfile
-		silent! execute '!xclip -selection clipboard %'
-	endfunction
-	nnoremap <F1> :call Clip()<cr>
-end
 
 " Redirect the output of a Vim or external command into a scratch buffer
 " By romainl
@@ -375,36 +329,32 @@ function! New(mods)
 endfunction
 command! New silent call New(<q-mods>)
 
-" Vimwiki
-let vw_syntax = {'python': 'python', 'c': 'c', 'c++': 'cpp'}
-let g:vimwiki_list = [{
-			\ 'path': '~/.vimwiki/', 
-			\ 'nested_syntaxes': vw_syntax,
-			\ 'path_html': '~/.vimwiki/auto_html/',
-			\ 'template_path': '~/.vimwiki/.templates/',
-			\ 'template_default': 'default',
-			\ 'template_ext': '.html',
-			\ 'vimwiki_hl_headers': 1,
-			\ }]
-
-command! Vw VimwikiIndex
-" autocmd filetype vimwiki setlocal textwidth=99
-let g:vimwiki_url_maxsave=5
-" TODO : mettre les bonnes abbréviations pour les bons cours
-augroup vimwikigroup
-	autocmd!
-augroup END
-let g:vimwiki_global_ext = 0
-
-" Flutter
-" let g:flutter_show_log_on_run = 0
-augroup fluttergroup
-	autocmd!
-	autocmd FileType dart nnoremap <F5> :FlutterHotReload<cr>
-	autocmd FileType dart nnoremap <F4> :FlutterRun<cr>
-	autocmd FileType dart let g:dart_style_guide = 2
-augroup END
-
-" autocmd BufWritePost vimrc source $MYVIMRC
 cnoremap <C-j> <Down>
 cnoremap <C-k> <Up>
+
+source ~/.config/nvim/private.vim
+
+" ------ Plugin settings ------
+
+" UltiSnips
+let g:UltiSnipsExpandTrigger = '<tab>'
+let g:UltiSnipsJumpForwardTrigger = '<tab>'
+let g:UltiSnipsJumpBackwardTrigger = '<s-tab>'
+
+" Vimtex
+let g:vimtex_compiler_latexmk = {
+      \ 'build_dir' : 'outpdf',
+      \ 'callback' : 1,
+      \ 'continuous' : 1,
+      \ 'executable' : 'latexmk',
+      \ 'hooks' : [],
+      \ 'options' : [
+      \   '-verbose',
+      \   '-file-line-error',
+      \   '-synctex=1',
+      \   '-interaction=nonstopmode',
+      \ ],
+      \}
+let g:vimtex_view_method = 'zathura'
+" let g:vimtex_view_general_options = 'outpdf/@pdf'
+" let g:vimtex_view_zathura_options = 'outpdf/@pdf'

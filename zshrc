@@ -107,6 +107,7 @@ setopt HIST_IGNORE_SPACE
 
 # GLOBBING
 setopt GLOBSTARSHORT
+setopt GLOB_STAR_SHORT
 
 function start_counter {
 	date1=`date +%s`; while true; do

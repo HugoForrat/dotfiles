@@ -18,9 +18,11 @@ floating_modifier $mod
 client.focused          #8a0e06 #285577 #ffffff #8a0e06   #8a0e06
 
 bar {
+    tray_output primary
     font pango:DejaVu Sans Mono, FontAwesome 8
     position bottom
-    status_command $HOME/.local/bin/i3status-rs \
+    # status_command $HOME/.local/bin/i3status-rs \
+    status_command $HOME/Src/i3status-rust/target/release/i3status-rs \
                    $HOME/.config/i3/i3status-rs.toml
     colors {
         separator #666666
@@ -44,6 +46,9 @@ bindsym $mod+h focus left
 bindsym $mod+j focus down
 bindsym $mod+k focus up
 bindsym $mod+l focus right
+
+# bindsym Control+j exec $HOME/test_down
+# bindsym Control+k exec $HOME/test_up
 
 # move focused window
 bindsym $mod+Shift+h move left
@@ -137,9 +142,11 @@ exec --no-startup-id numlockx
 exec --no-startup-id unclutter --timeout 2 &
 exec --no-startup-id picom
 exec --no-startup-id nm-applet --no-agent
-exec --no-startup-id $HOME/.local/bin/fehwrapper
 exec --no-startup-id spotify
-exec --no-startup-id entr_Pictures
+exec --no-startup-id $HOME/.local/bin/fehwrapper
+exec --no-startup-id $HOME/.local/bin/sc_watcher &
+
+# exec --no-startup-id entr_Pictures
 
 # ============================== #
 #                                #
@@ -195,6 +202,8 @@ for_window [instance="Wallpaper scraper" ] move container to workspace 9
 for_window [class="Spotify"              ] floating enable
 for_window [class="Spotify"              ] resize set 1184 719
 for_window [class="Spotify"              ] move scratchpad
+
+for_window [class="firefox" title="Picture-in-Picture"] floating disable
 
 for_window [class="^firefox$" title="^Save Image$"] floating disable
 for_window [class="^firefox$" title="^Enter name of file to save to…$"] floating disable
