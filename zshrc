@@ -74,6 +74,12 @@ bindkey -- "^X^E" edit-command-line
 
 prompt='%B%F{red}%2~ %# %f%b'
 
+# Allow termite to open a new terminal in the cwd
+if [[ $TERM == xterm-termite ]]; then
+  . /etc/profile.d/vte.sh
+  __vte_osc7
+fi
+
 function vim_and_clear {
 	\vim $@
 	clear
@@ -132,10 +138,8 @@ mvln() {
   ln -s $realpathdst $realpathsrc
 }
 
-
 source $HOME/.profile
 source $HOME/.alias
-
 
 if [[ "$(tty)" = "/dev/tty1" ]]; then
 	pgrep i3 || startx >& ~/.xsession.log

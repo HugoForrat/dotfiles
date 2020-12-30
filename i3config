@@ -192,8 +192,9 @@ bindsym XF86AudioNext        exec dbus-send --print-reply --dest=org.mpris.Media
 # xprop
 # WM_CLASS(STRING) = <instance>, <class>
 
-# Titanfall 2 fix.
+# Games fix.
 for_window [class="steam_app_1182480"    ] floating enable
+for_window [class="steam_app_582160"    ] floating enable
 
 for_window [title="Hello"                ] floating enable; move position center
 for_window [class="Steam"                ] move container to workspace 10

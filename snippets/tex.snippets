@@ -1,0 +1,111 @@
+snippet "eg " "e.g." rA
+e.g.$0
+endsnippet
+
+snippet "ie " "i.e." rA
+i.e.$0
+endsnippet
+
+snippet "\\and" "Boolean and" rA
+\\wedge
+endsnippet
+
+snippet "
+\`\`$1'' $0
+endsnippet
+
+snippet beg "begin{} / end{}" b
+\begin{$1}
+\end{$1}
+endsnippet
+
+snippet enum "Enumerate" bA
+\begin{enumerate}
+\tightlist
+	\item $0
+\end{enumerate}
+endsnippet
+
+snippet list "Itemize" bA
+\begin{itemize}
+\tightlist
+	\item $0
+\end{itemize}
+endsnippet
+
+snippet desc "Description" b
+\begin{description}
+\tightlist
+	\item[$1] $0
+\end{description}
+endsnippet
+
+snippet ite "item" bA
+\item $0
+endsnippet
+
+snippet s "Section" b
+\section{$0}
+endsnippet
+
+snippet ss "Section" b
+\subsection{$0}
+endsnippet
+
+snippet sss "Subsubsection" b
+\subsubsection{$0}
+endsnippet
+
+snippet url "Url"
+\url{$1}
+\medskip
+
+endsnippet
+
+snippet _ "italics"
+\textit{$1}$2 $0
+endsnippet
+
+snippet * "bold"
+\textbf{$1}$2 $0
+endsnippet
+
+snippet v "verbatim"
+\verb!$1!$2 $0
+endsnippet
+
+snippet im "InlineMath" i
+\($1\)$0
+endsnippet
+
+snippet pm "ParagraphMath" i
+
+\[$1\]$0
+endsnippet
+
+snippet frac "Fraction" i
+\frac{$1}{$2}$0
+endsnippet
+
+snippet tt "text" i
+\text{$1}$0
+endsnippet
+
+snippet 2eq "Two systems of equation"
+\begin{equation*}
+	\begin{aligned}[c]
+		$1
+	\end{aligned}
+	\qquad $2 \qquad
+	\begin{aligned}[c]
+		$3
+	\end{aligned}
+\end{equation*}$0
+endsnippet
+
+snippet box "Quote box" b
+\begin{mdframed}
+	$1
+\end{mdframed}
+$0
+endsnippet

@@ -174,7 +174,7 @@ set listchars=tab:▸\ ,eol:¬,space:␣
 
 " Setting the statusline
 set laststatus=2
-set statusline=%m\ Buf:%n\ %f\ %=\ %y\ %r
+set statusline=%m\ %f\ %=\ %y\ %r
 
 " Cursorline only on the 'focused' buffer
 augroup cursorlinegroup
@@ -230,13 +230,8 @@ augroup shebanggroup
 	autocmd BufNewFile *.py 0put ='#!/usr/bin/env python3'
 augroup END
 
-" Remapping for C
-augroup cgroup
-	autocmd!
-	autocmd FileType c inoremap <buffer> ,m int main(int argc, char* argv[]){<Enter>}<Esc>O
-	autocmd FileType c nnoremap <buffer> <cr> :make<cr>
-	autocmd FileType c nnoremap <buffer> <F5> :make run<cr>
-augroup END
+" TODO faire un snippet
+" autocmd FileType c inoremap <buffer> ,m int main(int argc, char* argv[]){<Enter>}<Esc>O
 
 " Remapping for C++
 function! CppInit()
@@ -257,13 +252,8 @@ augroup END
 " Python specifics
 augroup pythongroup
 	autocmd!
-	autocmd FileType python inoremap <buffer> " ""<Left>
-	autocmd FileType python inoremap <buffer> <C-e> self.
-	autocmd FileType python inoremap <buffer> ' ''<Left>
-	autocmd FileType python inoremap <buffer> ( ()<Left>
 	autocmd FileType python nnoremap <buffer> <cr> :w\|:!./%<cr>
 	autocmd BufNewFile *.py silent !chmod u+x %
-	" autocmd BufNewFile,FileType python silent !chmod u+x %
 augroup END
 
 function! CheckSpecialCommand()
