@@ -146,8 +146,6 @@ exec --no-startup-id spotify
 exec --no-startup-id $HOME/.local/bin/fehwrapper
 exec --no-startup-id $HOME/.local/bin/sc_watcher &
 
-# exec --no-startup-id entr_Pictures
-
 # ============================== #
 #                                #
 #     Bindings to programs       #
