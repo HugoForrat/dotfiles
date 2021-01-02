@@ -39,4 +39,5 @@ highlight article ":.*\\(embedded flash\\)$" magenta default
 
 browser "firefox %u"
 # macro key is ,
-macro w set browser "readable %u | w3m -T text/html"; open-in-browser; set browser firefox
+macro w set browser "readable %u | w3m -o save_hist=false -o use_cookie=false -o confirm_qq=false -T text/html && rmdir ~/.w3m"; open-in-browser; set browser firefox
+macro c set browser "echo %u | xclip -selection clipboard"; open-in-browser; set browser firefox
