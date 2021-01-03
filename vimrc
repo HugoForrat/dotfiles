@@ -223,6 +223,11 @@ augroup latexgroup
 	" autocmd BufEnter *.tex set conceallevel=1
 augroup END
 
+augroup markdowngroup
+	autocmd!
+  autocmd FileType markdown let b:surround_99 = "```\n\r\n```"
+augroup END
+
 " Shebangs
 augroup shebanggroup
 	autocmd!
@@ -321,6 +326,17 @@ command! New silent call New(<q-mods>)
 
 cnoremap <C-j> <Down>
 cnoremap <C-k> <Up>
+
+function HlSearch()
+  if &hlsearch
+    set nohlsearch
+    return 0
+  else
+    set hlsearch
+    return 1
+  endif
+endfunction
+nnoremap <expr> <C-s> HlSearch() ? "/" : ""
 
 source ~/.config/nvim/private.vim
 
