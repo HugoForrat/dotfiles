@@ -36,3 +36,4 @@ alias ssclip="xclip -selection clipboard <<< 'ß'"
 
 alias spotifyplay="dbus-send --print-reply --dest=org.mpris.MediaPlayer2.spotify /org/mpris/MediaPlayer2 org.mpris.MediaPlayer2.Player.Play"
 alias spotifypause="dbus-send --print-reply --dest=org.mpris.MediaPlayer2.spotify /org/mpris/MediaPlayer2 org.mpris.MediaPlayer2.Player.Pause"
+alias vf='nvim -c FZF'

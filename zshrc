@@ -89,6 +89,22 @@ function vim_help {
 	nvim -c ":h $1 | only"
 }
 
+function vert_append {
+  if [ $# = 0 ]; then
+    echo "Usage: $0 input_file1, input_file2, ..., output_file"
+  else
+    convert -append $@
+  fi
+}
+
+function hor_append {
+  if [ $# = 0 ]; then
+    echo "Usage: $0 input_file1, input_file2, ..., output_file"
+  else
+    convert +append $@
+  fi
+}
+
 # Snippet from https://sheerun.net/2014/03/21/how-to-boost-your-vim-productivity/
 # Typical use: press ^Z in Vim to go back to the shell
 # then press ^Z in the Shell to go back to Vim
