@@ -1,0 +1,5 @@
+set editing-mode vi
+
+# Remap <C-k> and <C-j> to up and down respectively
+"\C-k":"\033[A"
+"\C-j":"\033[B"
