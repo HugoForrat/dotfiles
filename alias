@@ -1,10 +1,8 @@
 # Aliases
-alias c='clear'
-
 alias :q='exit'
 alias :wq='exit'
 
-alias ls='ls --color=auto --group-directories-first'
+alias ls='ls --color=auto --group-directories-first -v'
 alias info='info --vi-keys'
 alias less='less -R'
 

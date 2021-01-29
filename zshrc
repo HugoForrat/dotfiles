@@ -184,3 +184,22 @@ setopt COMPLETE_ALIASES
 binary_format=('*.o', '*.pdf', '*.mkv', '*.mp3', '*.mp4', '*.jpg', '*.png')
 zstyle ':completion:*:*:vim:*:*files' ignored-patterns $binary_format
 zstyle ':completion:*:*:v:*:*files' ignored-patterns $binary_format
+
+# Forschungspraktikum
+# From https://stackoverflow.com/questions/17051123/source-a-file-in-zsh-when-entering-a-directory
+autoload -U add-zsh-hook
+ros_sourced=false;
+load-local-conf() {
+  if [ $ros_sourced = false ]; then
+    if [[ $PWD =~ ".*Forschungspraktikum.*"
+      && -f $HOME/TUD_WiSe2020/Forschungspraktikum/ros2/install/local_setup.zsh
+      && -r $HOME/TUD_WiSe2020/Forschungspraktikum/ros2/install/local_setup.zsh ]];
+    then
+      export QT_QPA_PLATFORMTHEME=qt5ct
+      . $HOME/TUD_WiSe2020/Forschungspraktikum/ros2/install/local_setup.zsh \
+        && . $HOME/.local/share/colcon_cd/function/colcon_cd.sh \
+        && ros_sourced=true
+    fi
+  fi
+}
+add-zsh-hook chpwd load-local-conf

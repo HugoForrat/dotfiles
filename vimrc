@@ -7,23 +7,27 @@ Plug 'godlygeek/tabular'
 Plug 'tpope/vim-dispatch'
 Plug 'sirver/UltiSnips'
 Plug 'lervag/vimtex'
+
+Plug 'rbong/vim-buffest'
+Plug 'tmsvg/pear-tree', {'for': 'python'}
+Plug 'bfredl/nvim-ipy', {'for': 'python'}
 call plug#end()
 
 " ------ General settings ------
 set nocompatible
-" let mapleader = " " " Leader key
-let maplocalleader = "," " Leader key
+let mapleader = "§" " Leader key
+let maplocalleader = "," " Local leader key
 set history=10000 " Maximum value
 language C
 
 " Buffer and quickfix list navigation
-nnoremap <Right> :bnext<cr>
-nnoremap <Left> :bprevious<cr>
+nnoremap L :bnext<cr>
+nnoremap H :bprevious<cr>
 nnoremap <Down> :cnext<cr>
 nnoremap <Up> :cprevious<cr>
 
 " Open and close the quickfix window with the same key
-nnoremap <expr> ù len(filter(range(1, winnr('$')), 'getbufvar(winbufnr(v:val), "&buftype") == "quickfix"')) ? ":cclose<cr>" : ":copen<cr>" 
+nnoremap <expr> ù len(filter(range(1, winnr('$')), 'getbufvar(winbufnr(v:val), "&buftype") == "quickfix"')) ? ":cclose<cr>" : ":copen<cr>"
 
 set showcmd   " Show (partial) command in status line.
 set showmatch " Show matching brackets.
@@ -85,6 +89,10 @@ nnoremap z. zz
 " Substitute only in selection
 vnoremap s :s/\%V
 
+" autocmd ShellCmdPost * echom(@:)
+" augroup generalautocmd
+"   autocmd ShellCmdPost * if @: =~ '\M!chmod' && getline(1) !~ '^#!' | echohl WarningMsg | echo 'Achtung' | echohl None | endif
+" augroup END
 
 " Create a view when quiting a file and loading it when entering back
 augroup viewgroup
@@ -112,7 +120,7 @@ augroup mailcommand
 	" autocmd FileType mail iabbrev .. ∙
 augroup END
 
-set gdefault 
+set gdefault
 "s/x/y substitutes for the whole line
 "s/x/y/g substitutes for the first instance only
 
@@ -134,6 +142,7 @@ nnoremap <C-k> <C-w>k
 nnoremap Q <Nop>
 nnoremap U <Nop>
 
+nnoremap <Leader>s :%s/\<<C-r><C-w>\>/
 nnoremap s :%s/
 nnoremap S :s/
 " TODO: quelque chose comme ça
@@ -164,8 +173,24 @@ tnoremap <Esc> <C-W>N
 
 autocmd BufEnter * if &diff | nnoremap <cr> :diffput<cr> | endif
 
+function! Shebang()
+  if &ft == 'python'
+    0put='#!/usr/bin/env python3'
+  elseif &ft == 'sh'
+    0put='#!/bin/bash'
+  endif
+endfunction
+command! Shebang silent call Shebang()
+
+let g:surround_113 = "“\r”"
+
 " ------ Appearance ------
-colorscheme gruvbox 
+" set termguicolors
+colorscheme gruvbox
+" Small adjusment on gruvbox:
+" hi! CursorLine guibg=#33302e
+
+
 set background=dark
 set foldcolumn=1 "Set the foldcolumn
 
@@ -229,10 +254,13 @@ augroup markdowngroup
 augroup END
 
 " Shebangs
-augroup shebanggroup
-	autocmd!
+" augroup shebanggroup
+" 	autocmd!
+" augroup END
+
+augroup shell
 	autocmd BufNewFile *.sh 0put ='#!/bin/bash'
-	autocmd BufNewFile *.py 0put ='#!/usr/bin/env python3'
+  autocmd FileType sh nnoremap <buffer> <cr> :!%:p<cr>
 augroup END
 
 " TODO faire un snippet
@@ -257,8 +285,9 @@ augroup END
 " Python specifics
 augroup pythongroup
 	autocmd!
-	autocmd FileType python nnoremap <buffer> <cr> :w\|:!./%<cr>
+	" autocmd FileType python nnoremap <buffer> <cr> :!./%<cr>
 	autocmd BufNewFile *.py silent !chmod u+x %
+	autocmd BufNewFile *.py 0put ='#!/usr/bin/env python3'
 augroup END
 
 function! CheckSpecialCommand()
@@ -330,13 +359,15 @@ cnoremap <C-k> <Up>
 function HlSearch()
   if &hlsearch
     set nohlsearch
-    return 0
+    redraw
+    return ''
   else
     set hlsearch
-    return 1
+    return '/'
   endif
 endfunction
-nnoremap <expr> <C-s> HlSearch() ? "/" : ""
+nnoremap <expr> <C-s> HlSearch()
+" nnoremap <expr> <C-s> &hlsearch ? ":set nohlsearch\<cr>" : ":set hlsearch \<cr>/"
 
 source ~/.config/nvim/private.vim
 
@@ -364,3 +395,24 @@ let g:vimtex_compiler_latexmk = {
 let g:vimtex_view_method = 'zathura'
 " let g:vimtex_view_general_options = 'outpdf/@pdf'
 " let g:vimtex_view_zathura_options = 'outpdf/@pdf'
+
+" Nvim-ipy
+let g:nvim_ipy_perform_mappings = 0
+augroup jupyter
+  autocmd BufNewFile,BufRead *.ipy setlocal filetype=python
+
+  autocmd BufNewFile,BufRead *.ipy nmap <buffer> <silent> <F8> <Plug>(IPy-Interrupt)
+  autocmd BufNewFile,BufRead *.ipy nmap <buffer> <silent> <F9> <Plug>(IPy-Terminate)
+
+  autocmd BufNewFile,BufRead *.ipy nmap <buffer> <silent> <cr> <Plug>(IPy-RunCell)
+  autocmd BufNewFile,BufRead *.ipy nmap <buffer> <silent> <F5> <Plug>(IPy-RunAll)
+  autocmd BufNewFile,BufRead *.ipy nmap <buffer> <silent> <F6> <Plug>(IPy-Run)
+  autocmd BufNewFile,BufRead *.ipy vmap <buffer> <silent> <cr> <Plug>(IPy-Run)
+
+  autocmd FileType python nnoremap <buffer> go o##<cr>##<Up><cr>
+  autocmd FileType python vnoremap <buffer> go <esc>mb`<O##<esc>`>o##<esc>`b
+
+  " autocmd BufNewFile,BufRead *.ipy nmap <silent> <Plug>(IPy-RunOp)
+  " autocmd BufNewFile,BufRead *.ipy nmap <silent> <Plug>(IPy-Complete)
+  " autocmd BufNewFile,BufRead *.ipy nmap <silent> <Plug>(IPy-WordObjInfo)
+augroup END

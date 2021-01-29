@@ -145,6 +145,8 @@ exec --no-startup-id nm-applet --no-agent
 exec --no-startup-id spotify
 exec --no-startup-id $HOME/.local/bin/fehwrapper
 exec --no-startup-id $HOME/.local/bin/sc_watcher &
+# Necessary for kdeconnect ?
+exec --no-startup-id /usr/lib/kdeconnectd
 
 # ============================== #
 #                                #
@@ -152,10 +154,12 @@ exec --no-startup-id $HOME/.local/bin/sc_watcher &
 #                                #
 # ============================== #
 
-bindsym $mod+d               exec rofi -show run
+bindsym $mod+d               exec rofi -show drun
 bindsym $mod+Return          exec termite
 bindsym $mod+w               exec --no-startup-id firefox
 bindsym $mod+x               exec --no-startup-id firefox -private-window
+bindsym $mod+y               exec --no-startup-id rofi_bm all
+bindsym $mod+Shift+y         exec --no-startup-id rofi_bm
 
 bindsym Print                exec maim -s $HOME/Pictures/Screenshot/sc-$(date +"%Y-%m-%d_%H.%M.%S").png
 bindsym $mod+Print           exec maim $HOME/Pictures/Screenshot/sc-$(date +"%Y-%m-%d_%H.%M.%S").png
@@ -203,6 +207,7 @@ for_window [class="Spotify"              ] resize set 1184 719
 for_window [class="Spotify"              ] move scratchpad
 
 for_window [class="firefox" title="Picture-in-Picture"] floating disable
+for_window [class="Drawing" title="Ouvrir une image"] floating disable
 
 for_window [class="^firefox$" title="^Save Image$"] floating disable
 for_window [class="^firefox$" title="^Enter name of file to save to…$"] floating disable
@@ -210,3 +215,6 @@ for_window [class="^firefox$" title="^Enter name of file to save to…$"] floati
 for_window [title="Android Emulator - Pixel_3a_API_30_x86:5554"] resize set width 576 
 
 for_window [class="kdeconnect.app"] floating enable
+for_window [class="Electron"] floating disable
+
+for_window [class="matplotlib"] move container to workspace 10
