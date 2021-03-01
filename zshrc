@@ -72,7 +72,7 @@ autoload -Uz edit-command-line
 zle -N edit-command-line
 bindkey -- "^X^E" edit-command-line
 
-prompt='%B%F{red}%2~ %# %f%b'
+prompt='%B%F{red}%2~ $ %f%b'
 
 # Allow termite to open a new terminal in the cwd
 if [[ $TERM == xterm-termite ]]; then
@@ -102,6 +102,17 @@ function hor_append {
     echo "Usage: $0 input_file1, input_file2, ..., output_file"
   else
     convert +append $@
+  fi
+}
+
+function better_md2html {
+  if [ $# != 2 ] || ! [[ $1 =~ '\.md$' ]] || ! [[ $2 =~ '\.html$' ]] ; then
+    echo "Usage: $0 inputfile.md outputfile.html"
+  else
+    echo '<head> <style type="text/css">body{margin:40px auto;max-width:650px;line-height:1.6;font-size:18px;color:#444;padding:0 10px}h1,h2,h3{line-height:1.2}</style> </head>' > $2
+    echo '<body>' >> $2
+    md2html $1 >> $2
+    echo '</body>' >> $2
   fi
 }
 

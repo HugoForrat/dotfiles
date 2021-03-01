@@ -11,11 +11,12 @@ Plug 'lervag/vimtex'
 Plug 'rbong/vim-buffest'
 Plug 'tmsvg/pear-tree', {'for': 'python'}
 Plug 'bfredl/nvim-ipy', {'for': 'python'}
+Plug 'davidhalter/jedi-vim', {'for': 'python'}
 call plug#end()
 
 " ------ General settings ------
 set nocompatible
-let mapleader = "§" " Leader key
+let mapleader = " " " Leader key
 let maplocalleader = "," " Local leader key
 set history=10000 " Maximum value
 language C
@@ -26,12 +27,14 @@ nnoremap H :bprevious<cr>
 nnoremap <Down> :cnext<cr>
 nnoremap <Up> :cprevious<cr>
 
+nnoremap <leader>p <C-^>
+
 " Open and close the quickfix window with the same key
 nnoremap <expr> ù len(filter(range(1, winnr('$')), 'getbufvar(winbufnr(v:val), "&buftype") == "quickfix"')) ? ":cclose<cr>" : ":copen<cr>"
 
 set showcmd   " Show (partial) command in status line.
 set showmatch " Show matching brackets.
-set incsearch " Incremental search
+set incsearch
 set autowrite " Automatically save before commands like :next and :make
 set nomodeline
 set linebreak
@@ -40,9 +43,9 @@ set showbreak=˪
 set noshowmatch
 set wildmenu
 set hidden " Hide buffers when they are abandoned
-set autoindent " Copy indent from current line when starting a new line
 set autoread
 set wildignore=*.aux,*.log
+set undofile
 
 " Nvim options
 set nohlsearch
@@ -68,6 +71,7 @@ set expandtab
 set tabstop=2
 set softtabstop=2
 set shiftwidth=2
+set autoindent " Copy indent from current line when starting a new line
 
 " Move visual block
 vnoremap J :m '>+1<CR>gv=gv
@@ -80,6 +84,8 @@ vnoremap <C-J> J
 
 " Miscellaneous remapping
 inoremap <C-a> <Esc>A
+inoremap <C-e> <C-r>=execute("")<left><left>
+
 " Turns out the following isn't the default behaviour of ]p !
 nnoremap ]p p'[=']
 
@@ -99,6 +105,9 @@ augroup viewgroup
 	autocmd!
 	autocmd BufWrite ~/Src/** mkview
 	autocmd BufWinEnter ~/Src/** silent! loadview
+
+  " Resize the splits when Vim is itself resized
+  autocmd VimResized * wincmd =
 augroup END
 
 augroup mailcommand
@@ -117,6 +126,7 @@ augroup mailcommand
 	autocmd FileType mail syntax match Comment "^\s*#.*$"
 	autocmd FileType mail syntax match GruvboxGreen "^\s*##.*$"
 	autocmd FileType mail iabbrev -- —
+	autocmd FileType mail let b:surround_34 = "“\r”"
 	" autocmd FileType mail iabbrev .. ∙
 augroup END
 
@@ -182,7 +192,7 @@ function! Shebang()
 endfunction
 command! Shebang silent call Shebang()
 
-let g:surround_113 = "“\r”"
+" let g:surround_113 = "“\r”"
 
 " ------ Appearance ------
 " set termguicolors
@@ -208,21 +218,10 @@ augroup cursorlinegroup
 	autocmd BufLeave * setlocal nocursorline
 augroup END
 
-" Automatically copies unloaded scratch buffer to clipboard
-if has('clipboard')
-	augroup scratchgroup
-		autocmd!
-		autocmd BufUnload * if(&buftype == "nofile") | execute 'normal! ggVG"+y' | endif
-	augroup END
-endif
-
-
-
 " ------ Language specifics ------
 "  == LaTeX =
 " Tells vim to always expects LaTeX code (instead of plain tex code) when reading a .tex file
 let g:tex_flavor = "latex"
-" let g:tex_conceal = 'admg'
 
 function! ItemIfEnv()
   let l:env_found = 0
@@ -250,13 +249,9 @@ augroup END
 
 augroup markdowngroup
 	autocmd!
+  " surround with code block with c
   autocmd FileType markdown let b:surround_99 = "```\n\r\n```"
 augroup END
-
-" Shebangs
-" augroup shebanggroup
-" 	autocmd!
-" augroup END
 
 augroup shell
 	autocmd BufNewFile *.sh 0put ='#!/bin/bash'
@@ -393,8 +388,9 @@ let g:vimtex_compiler_latexmk = {
       \ ],
       \}
 let g:vimtex_view_method = 'zathura'
-" let g:vimtex_view_general_options = 'outpdf/@pdf'
-" let g:vimtex_view_zathura_options = 'outpdf/@pdf'
+
+" Pear tree
+let g:pear_tree_repeatable_expand = 0
 
 " Nvim-ipy
 let g:nvim_ipy_perform_mappings = 0
@@ -416,3 +412,7 @@ augroup jupyter
   " autocmd BufNewFile,BufRead *.ipy nmap <silent> <Plug>(IPy-Complete)
   " autocmd BufNewFile,BufRead *.ipy nmap <silent> <Plug>(IPy-WordObjInfo)
 augroup END
+
+" jedi-vi
+let g:jedi#popup_on_dot = 0
+let g:jedi#completions_command = ''
