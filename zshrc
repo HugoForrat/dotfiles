@@ -232,3 +232,7 @@ load-local-conf() {
   fi
 }
 add-zsh-hook chpwd load-local-conf
+
+function mpv_from {
+  mpv --start=$(sed -n 's/%STOP[[:space:]]*@[[:space:]]*\(.*\)$/\1/p' $2) $1
+}
