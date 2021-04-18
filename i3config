@@ -145,6 +145,9 @@ exec --no-startup-id nm-applet --no-agent
 exec --no-startup-id spotify
 exec --no-startup-id $HOME/.local/bin/fehwrapper
 exec --no-startup-id $HOME/.local/bin/sc_watcher &
+exec --no-startup-id /usr/bin/xset b off # Disable system bell
+
+
 # Necessary for kdeconnect ?
 exec --no-startup-id /usr/lib/kdeconnectd
 
@@ -211,10 +214,16 @@ for_window [class="Drawing" title="Ouvrir une image"] floating disable
 
 for_window [class="^firefox$" title="^Save Image$"] floating disable
 for_window [class="^firefox$" title="^Enter name of file to save to…$"] floating disable
+for_window [class="firefox" title="File Upload"] floating disable
 
 for_window [title="Android Emulator - Pixel_3a_API_30_x86:5554"] resize set width 576 
 
 for_window [class="kdeconnect.app"] floating enable
 for_window [class="Electron"] floating disable
 
-for_window [class="matplotlib"] move container to workspace 10
+# for_window [class="matplotlib"] move container to workspace 8
+
+
+# test FP
+
+for_window [title="FP Term \d"] border normal

@@ -74,6 +74,10 @@ snippet * "bold"
 \textbf{$1}$2 $0
 endsnippet
 
+snippet e "emph"
+\emph{$1}$2 $0
+endsnippet
+
 snippet v "verbatim"
 \verb!$1!$2 $0
 endsnippet
@@ -112,4 +116,8 @@ snippet box "Quote box" b
 	$1
 \end{mdframed}
 $0
+endsnippet
+
+snippet \formatdate{}{}{} "format Date" i
+\formatdate{$1}{$2}{$3}
 endsnippet

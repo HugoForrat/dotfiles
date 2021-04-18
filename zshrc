@@ -89,6 +89,8 @@ function vim_help {
 	nvim -c ":h $1 | only"
 }
 
+# TODO
+# echo usage if $# < 3
 function vert_append {
   if [ $# = 0 ]; then
     echo "Usage: $0 input_file1, input_file2, ..., output_file"
@@ -113,6 +115,22 @@ function better_md2html {
     echo '<body>' >> $2
     md2html $1 >> $2
     echo '</body>' >> $2
+  fi
+}
+
+function quick_ff {
+  html_name=$(mktemp --suffix='.html')
+  better_md2html $1 $html_name
+  firefox $html_name
+  sleep 10
+  rm $html_name
+}
+
+function mkv2mp4 {
+  if [ $# != 1 ] || ! [[ $1 =~ '\.mkv$' ]] ; then
+    echo "Usage: $0 file.mkv"
+  else
+    ffmpeg -i $1 -codec copy "$(echo "$1" | cut -f 1 -d '.')".mp4
   fi
 }
 

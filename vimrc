@@ -15,7 +15,6 @@ Plug 'davidhalter/jedi-vim', {'for': 'python'}
 call plug#end()
 
 " ------ General settings ------
-set nocompatible
 let mapleader = " " " Leader key
 let maplocalleader = "," " Local leader key
 set history=10000 " Maximum value
@@ -30,10 +29,9 @@ nnoremap <Up> :cprevious<cr>
 nnoremap <leader>p <C-^>
 
 " Open and close the quickfix window with the same key
-nnoremap <expr> ù len(filter(range(1, winnr('$')), 'getbufvar(winbufnr(v:val), "&buftype") == "quickfix"')) ? ":cclose<cr>" : ":copen<cr>"
+nnoremap <silent> <expr> ù len(filter(range(1, winnr('$')), 'getbufvar(winbufnr(v:val), "&buftype") == "quickfix"')) ? ":cclose<cr>" : ":copen<cr>"
 
 set showcmd   " Show (partial) command in status line.
-set showmatch " Show matching brackets.
 set incsearch
 set autowrite " Automatically save before commands like :next and :make
 set nomodeline
@@ -366,6 +364,29 @@ nnoremap <expr> <C-s> HlSearch()
 
 source ~/.config/nvim/private.vim
 
+" From https://stackoverflow.com/a/6271254
+function! Get_visual_selection()
+    " Why is this not a built-in Vim script function?!
+    let [line_start, column_start] = getpos("'<")[1:2]
+    let [line_end, column_end] = getpos("'>")[1:2]
+    let lines = getline(line_start, line_end)
+    if len(lines) == 0
+        return ''
+    endif
+    let lines[-1] = lines[-1][: column_end - (&selection == 'inclusive' ? 1 : 2)]
+    let lines[0] = lines[0][column_start - 1:]
+    return join(lines, "\n")
+endfunction
+
+function! SearchVisualSelection()
+  let l:vis_select = Get_visual_selection()
+  return "/".l:vis_select
+endfunction
+
+" vnoremap / /<c-r>=Get_visual_selection()
+" vnoremap <expr> / SearchVisualSelection()
+
+
 " ------ Plugin settings ------
 
 " UltiSnips
@@ -395,6 +416,7 @@ let g:pear_tree_repeatable_expand = 0
 " Nvim-ipy
 let g:nvim_ipy_perform_mappings = 0
 augroup jupyter
+	autocmd!
   autocmd BufNewFile,BufRead *.ipy setlocal filetype=python
 
   autocmd BufNewFile,BufRead *.ipy nmap <buffer> <silent> <F8> <Plug>(IPy-Interrupt)
