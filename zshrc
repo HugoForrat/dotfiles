@@ -234,5 +234,31 @@ load-local-conf() {
 add-zsh-hook chpwd load-local-conf
 
 function mpv_from {
-  mpv --start=$(sed -n 's/%STOP[[:space:]]*@[[:space:]]*\(.*\)$/\1/p' $2) $1
+  USAGE="Error: you must call a tex file and a video (mkv, mp4, m4v) file
+  Usage: $0 file.tex file.mkv"
+
+  if [ $# != 2 ] ; then
+    echo $USAGE
+    return 1
+  fi
+
+  if [[ $1 =~ '\.tex$' ]] ; then
+    textfile=$1
+  elif [[ $2 =~ '\.tex$' ]] ; then
+    textfile=$2
+  else
+    echo $USAGE
+    return 1
+  fi
+
+  if [[ $1 =~ '\.mkv$' ]] || [[ $1 =~ '\.mp4$' ]] || [[ $1 =~ '\.m4v$' ]]; then
+    videofile=$1
+  elif [[ $2 =~ '\.mkv$' ]] || [[ $2 =~ '\.mp4$' ]] || [[ $2 =~ '\.m4v$' ]]; then
+    videofile=$2
+  else
+    echo $USAGE
+    return 1
+  fi
+
+  mpv --start=$(sed -n 's/%STOP[[:space:]]*@[[:space:]]*\(.*\)$/\1/p' $textfile) $videofile
 }
