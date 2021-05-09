@@ -12,6 +12,9 @@ Plug 'rbong/vim-buffest'
 Plug 'tmsvg/pear-tree', {'for': 'python'}
 Plug 'bfredl/nvim-ipy', {'for': 'python'}
 Plug 'davidhalter/jedi-vim', {'for': 'python'}
+
+Plug 'junegunn/fzf', { 'do': { -> fzf#install() } }
+Plug 'junegunn/fzf.vim'
 call plug#end()
 
 " ------ General settings ------
@@ -26,10 +29,12 @@ nnoremap H :bprevious<cr>
 nnoremap <Down> :cnext<cr>
 nnoremap <Up> :cprevious<cr>
 
-nnoremap <leader>p <C-^>
+" nnoremap <leader>p <C-^>
 
 " Open and close the quickfix window with the same key
 nnoremap <silent> <expr> ù len(filter(range(1, winnr('$')), 'getbufvar(winbufnr(v:val), "&buftype") == "quickfix"')) ? ":cclose<cr>" : ":copen<cr>"
+
+nnoremap gF <C-w><C-f><C-w>L
 
 set showcmd   " Show (partial) command in status line.
 set incsearch
@@ -164,7 +169,8 @@ let g:netrw_browsex_viewer= "/usr/bin/firefox" " Bug au niveau de Vim/Netrw : ht
 
 " Let escape go in Terminal Normal mode
 " (use i to go back into Terminal mode)
-tnoremap <Esc> <C-W>N
+" TODO find a way to conciliate this with FZF
+" tnoremap <Esc> <C-W>N
 
 " Stolen from Gary Bernhardt
 " Indent if we're at the beginning of a line. Else, do completion.
@@ -237,12 +243,27 @@ endfunction
 " Remapping for LaTeX
 augroup latexgroup
 	autocmd!
+  " Uses 'e' for surround inside inline math
   autocmd FileType tex let b:surround_101 = "\\(\r\\)"
+
+  " Uses 'b' for surround inside textbf (bold text)
   autocmd FileType tex let b:surround_98 = "\\textbf{\r}"
+
+  " Uses '"' for surround with LaTeX quotes
+  autocmd FileType tex let b:surround_34 = "``\r''"
 	autocmd BufEnter *.tex inoremap <buffer> <expr> <cr> ItemIfEnv() ? "\n\\item " : "\n"
 	autocmd BufEnter *.tex inoremap <buffer> <S-cr> <cr>
 	autocmd BufEnter *.tex nnoremap <buffer> <expr> o ItemIfEnv() ? "o\\item <Esc>==A" : "o"
-	" autocmd BufEnter *.tex set conceallevel=1
+
+  " Make a visual line selection into an itemize environment; each line being
+  " an item
+  autocmd FileType tex vnoremap <buffer> <C-l> _`<O\begin{itemize}`>o\end{itemize}gv:normal!I\item 
+
+  " Remap 'I' so that it starts after '\item'
+  autocmd FileType tex nnoremap <buffer> <expr> I getline('.') =~ '^\s*\\item' ? "_Wi" : "I"
+
+  " TODO prune ToC
+  autocmd FileType tex nnoremap <localleader>lt :call vimtex#fzf#run()<cr>
 augroup END
 
 augroup markdowngroup
@@ -386,6 +407,9 @@ endfunction
 " vnoremap / /<c-r>=Get_visual_selection()
 " vnoremap <expr> / SearchVisualSelection()
 
+augroup cgroup
+  autocmd FileType c setlocal shiftwidth=4 tabstop=4 softtabstop=4
+augroup END
 
 " ------ Plugin settings ------
 
@@ -409,6 +433,9 @@ let g:vimtex_compiler_latexmk = {
       \ ],
       \}
 let g:vimtex_view_method = 'zathura'
+let g:vimtex_toc_config_matchers = {
+      \ 'beamer_frame': {'disable': 1},
+      \}
 
 " Pear tree
 let g:pear_tree_repeatable_expand = 0

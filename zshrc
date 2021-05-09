@@ -237,28 +237,35 @@ function mpv_from {
   USAGE="Error: you must call a tex file and a video (mkv, mp4, m4v) file
   Usage: $0 file.tex file.mkv"
 
-  if [ $# != 2 ] ; then
-    echo $USAGE
-    return 1
-  fi
+  if [ $# = 2 ] ; then
+    if [[ $1 =~ '\.tex$' ]] ; then
+      textfile=$1
+    elif [[ $2 =~ '\.tex$' ]] ; then
+      textfile=$2
+    else
+      echo $USAGE
+      return 1
+    fi
 
-  if [[ $1 =~ '\.tex$' ]] ; then
+    if [[ $1 =~ '\.mkv$' ]] || [[ $1 =~ '\.mp4$' ]] || [[ $1 =~ '\.m4v$' ]]; then
+      videofile=$1
+    elif [[ $2 =~ '\.mkv$' ]] || [[ $2 =~ '\.mp4$' ]] || [[ $2 =~ '\.m4v$' ]]; then
+      videofile=$2
+    else
+      echo $USAGE
+      return 1
+    fi
+  elif [ $# = 1 ] ; then
+    if ! [[ $1 =~ '\.tex$' ]]; then
+      echo $USAGE
+      return 1
+    fi
     textfile=$1
-  elif [[ $2 =~ '\.tex$' ]] ; then
-    textfile=$2
+    videofile=$(find videos -name "$(sed 's/class\([[:digit:]]\+\)\.tex/\1/' <<(echo $textfile))*.m4v")
   else
     echo $USAGE
     return 1
   fi
 
-  if [[ $1 =~ '\.mkv$' ]] || [[ $1 =~ '\.mp4$' ]] || [[ $1 =~ '\.m4v$' ]]; then
-    videofile=$1
-  elif [[ $2 =~ '\.mkv$' ]] || [[ $2 =~ '\.mp4$' ]] || [[ $2 =~ '\.m4v$' ]]; then
-    videofile=$2
-  else
-    echo $USAGE
-    return 1
-  fi
-
-  mpv --start=$(sed -n 's/%STOP[[:space:]]*@[[:space:]]*\(.*\)$/\1/p' $textfile) $videofile
+  mpv --start=$(sed -n 's/%[[:space:]]*STOP[[:space:]]*@[[:space:]]*\(.*\)$/\1/p' $textfile) $videofile
 }
