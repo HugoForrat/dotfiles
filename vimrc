@@ -142,7 +142,7 @@ set rtp+=~/.fzf
 inoremap <C-f> <Esc>:FZF<Enter>
 noremap <C-f> :FZF<Enter>
 if has('nvim')
-	let g:fzf_layout = { 'window': { 'width': 0.9, 'height': 0.6 } }
+	let g:fzf_layout = { 'window': { 'width': 0.9, 'height': 0.9 } }
 endif
 
 " Change split in one less key press
@@ -264,6 +264,11 @@ augroup latexgroup
 
   " TODO prune ToC
   autocmd FileType tex nnoremap <localleader>lt :call vimtex#fzf#run()<cr>
+
+  " TODO find a way to apply that to all “natural language” filetypes
+  autocmd FileType tex iabbrev THe The
+  autocmd FileType tex iabbrev THis This
+  autocmd FileType tex iabbrev THere There
 augroup END
 
 augroup markdowngroup

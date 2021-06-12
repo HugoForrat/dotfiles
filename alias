@@ -5,6 +5,8 @@ alias :wq='exit'
 alias ls='ls --color=auto --group-directories-first -v'
 alias info='info --vi-keys'
 alias less='less -R'
+alias h='head -n 1'
+alias t='tail -n 1'
 
 alias sx='sxiv'
 

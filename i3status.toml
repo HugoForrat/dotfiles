@@ -1,5 +1,7 @@
-theme = "solarized-dark"
-icons = "awesome"
+[theme]
+name = "$HOME/Src/i3status-rust/files/themes/solarized-dark.toml"
+[icons]
+name = "$HOME/Src/i3status-rust/files/icons/awesome.toml"
 
 [[block]]
 block = "custom"

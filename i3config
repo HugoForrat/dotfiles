@@ -158,7 +158,7 @@ exec --no-startup-id /usr/lib/kdeconnectd
 # ============================== #
 
 bindsym $mod+d               exec rofi -show drun
-bindsym $mod+Return          exec termite
+bindsym $mod+Return          exec alacritty
 bindsym $mod+w               exec --no-startup-id firefox
 bindsym $mod+x               exec --no-startup-id firefox -private-window
 bindsym $mod+y               exec --no-startup-id rofi_bm all
@@ -215,6 +215,7 @@ for_window [class="Drawing" title="Ouvrir une image"] floating disable
 for_window [class="^firefox$" title="^Save Image$"] floating disable
 for_window [class="^firefox$" title="^Enter name of file to save to…$"] floating disable
 for_window [class="firefox" title="File Upload"] floating disable
+for_window [class="firefox" title="Save As"] floating disable
 
 for_window [title="Android Emulator - Pixel_3a_API_30_x86:5554"] resize set width 576 
 
