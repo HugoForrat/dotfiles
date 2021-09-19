@@ -164,6 +164,10 @@ bindsym $mod+x               exec --no-startup-id firefox -private-window
 bindsym $mod+y               exec --no-startup-id rofi_bm all
 bindsym $mod+Shift+y         exec --no-startup-id rofi_bm
 
+# Windows management script
+bindsym $mod+Control+q       exec ~/.scripts/i3-close-all
+bindsym $mod+Control+s       exec python ~/.scripts/i3sort
+
 bindsym Print                exec maim -s $HOME/Pictures/Screenshot/sc-$(date +"%Y-%m-%d_%H.%M.%S").png
 bindsym $mod+Print           exec maim $HOME/Pictures/Screenshot/sc-$(date +"%Y-%m-%d_%H.%M.%S").png
 bindsym $mod+Control+Print   exec maim -B --window=$(xdotool getwindowfocus) \
