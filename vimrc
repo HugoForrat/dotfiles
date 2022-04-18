@@ -24,19 +24,22 @@ set history=10000 " Maximum value
 language C
 
 " Buffer and quickfix list navigation
-nnoremap L :bnext<cr>
-nnoremap H :bprevious<cr>
+nnoremap <silent> L :bnext<cr>
+nnoremap <silent> H :bprevious<cr>
 nnoremap <Down> :cnext<cr>
 nnoremap <Up> :cprevious<cr>
 
-" nnoremap <leader>p <C-^>
+" Mapping to visually select and perform operation _within a line_
+" 'il' => 'inside line' (without rightmost whitespace nor newline)
+onoremap <silent> il :<C-u>execute "normal!_vg_"<cr>
+xnoremap <silent> il :<C-u>execute "normal!_vg_"<cr>
 
 " Open and close the quickfix window with the same key
 nnoremap <silent> <expr> ù len(filter(range(1, winnr('$')), 'getbufvar(winbufnr(v:val), "&buftype") == "quickfix"')) ? ":cclose<cr>" : ":copen<cr>"
 
 nnoremap gF <C-w><C-f><C-w>L
 
-set showcmd   " Show (partial) command in status line.
+set showcmd
 set incsearch
 set autowrite " Automatically save before commands like :next and :make
 set nomodeline
@@ -48,18 +51,11 @@ set wildmenu
 set hidden " Hide buffers when they are abandoned
 set autoread
 set wildignore=*.aux,*.log
+set wildmode=longest:lastused:full
 set undofile
 
 " Nvim options
 set nohlsearch
-
-" Puts the terminal output at the bottom of the screen instead of having an alternate screen
-" Stolen from Gary Bernhardt who took it here : http://www.shallowsky.com/linux/noaltscreen.html
-" set t_ti= t_te=
-
-" Undofile
-" set undofile
-" set undodir=~/.vim/undodir/
 
 " Show the number of the line you're in and the relative number of the lines above and below
 set number
@@ -103,6 +99,10 @@ vnoremap s :s/\%V
 "   autocmd ShellCmdPost * if @: =~ '\M!chmod' && getline(1) !~ '^#!' | echohl WarningMsg | echo 'Achtung' | echohl None | endif
 " augroup END
 
+if executable('rg')
+  set grepprg=rg\ --vimgrep\ --hidden\ --glob\ '!.git'
+endif
+
 " Create a view when quiting a file and loading it when entering back
 augroup viewgroup
 	autocmd!
@@ -131,6 +131,7 @@ augroup mailcommand
 	autocmd FileType mail iabbrev -- —
 	autocmd FileType mail let b:surround_34 = "“\r”"
 	" autocmd FileType mail iabbrev .. ∙
+	autocmd FileType mail nnoremap <buffer> <expr> I getline('.') =~ '^\s*-' ? "_Wi" : "I"
 augroup END
 
 set gdefault
@@ -192,6 +193,8 @@ function! Shebang()
     0put='#!/usr/bin/env python3'
   elseif &ft == 'sh'
     0put='#!/bin/bash'
+  elseif &ft == 'zsh'
+    0put='#!/bin/zsh'
   endif
 endfunction
 command! Shebang silent call Shebang()
@@ -203,7 +206,6 @@ command! Shebang silent call Shebang()
 colorscheme gruvbox
 " Small adjusment on gruvbox:
 " hi! CursorLine guibg=#33302e
-
 
 set background=dark
 set foldcolumn=1 "Set the foldcolumn
