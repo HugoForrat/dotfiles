@@ -15,6 +15,14 @@ Plug 'davidhalter/jedi-vim', {'for': 'python'}
 
 Plug 'junegunn/fzf', { 'do': { -> fzf#install() } }
 Plug 'junegunn/fzf.vim'
+
+" Plug '~/Src/lingua-franca.vim-git/'
+
+if has('nvim') && version >= 0.5.0
+  Plug 'nvim-treesitter/nvim-treesitter', {'do': ':TSUpdate'}
+  Plug 'neovim/nvim-lspconfig'
+endif
+
 call plug#end()
 
 " ------ General settings ------
@@ -225,7 +233,14 @@ augroup cursorlinegroup
 augroup END
 
 " ------ Language specifics ------
-"  == LaTeX =
+"  == Lingua Franca ==
+augroup lfgroup
+  autocmd!
+  autocmd FileType linguafranca command! -nargs=1 Import call LFImport(<q-args>)
+  " autocmd FileType linguafranca command! -nargs=1 Import silent call LFImport(<q-args>)
+augroup END
+
+"  == LaTeX ==
 " Tells vim to always expects LaTeX code (instead of plain tex code) when reading a .tex file
 let g:tex_flavor = "latex"
 
@@ -242,6 +257,11 @@ function! ItemIfEnv()
   return l:env_found
 endfunction
 
+" function LatexItemize()
+"   normal!_
+"   normal!`<O\begin{itemize}
+"   normal!>o\end{itemize}
+" endfunction
 " Remapping for LaTeX
 augroup latexgroup
 	autocmd!
@@ -250,6 +270,8 @@ augroup latexgroup
 
   " Uses 'b' for surround inside textbf (bold text)
   autocmd FileType tex let b:surround_98 = "\\textbf{\r}"
+  " t for typeface
+  autocmd FileType tex let b:surround_116 = "\\texttt{\r}"
 
   " Uses '"' for surround with LaTeX quotes
   autocmd FileType tex let b:surround_34 = "``\r''"
@@ -260,6 +282,7 @@ augroup latexgroup
   " Make a visual line selection into an itemize environment; each line being
   " an item
   autocmd FileType tex vnoremap <buffer> <C-l> _`<O\begin{itemize}`>o\end{itemize}gv:normal!I\item 
+  " autocmd FileType tex command! Clean execute("'<,'>s/\%V\\item \(\\\(item\|begin{itemize}\|end{itemize}\)\)/\1")
 
   " Remap 'I' so that it starts after '\item'
   autocmd FileType tex nnoremap <buffer> <expr> I getline('.') =~ '^\s*\\item' ? "_Wi" : "I"
@@ -271,18 +294,24 @@ augroup latexgroup
   autocmd FileType tex iabbrev THe The
   autocmd FileType tex iabbrev THis This
   autocmd FileType tex iabbrev THere There
+
+	autocmd FileType tex setlocal spell spelllang=en
 augroup END
 
 augroup markdowngroup
 	autocmd!
   " surround with code block with c
   autocmd FileType markdown let b:surround_99 = "```\n\r\n```"
+  autocmd FileType markdown highlight link markdownError NONE " Disable error highlighting for underscore between \w characters
 augroup END
 
 augroup shell
 	autocmd BufNewFile *.sh 0put ='#!/bin/bash'
   autocmd FileType sh nnoremap <buffer> <cr> :!%:p<cr>
 augroup END
+let g:sh_fold_enabled = 1
+let g:is_bash         = 1
+let g:sh_no_error     = 1
 
 " TODO faire un snippet
 " autocmd FileType c inoremap <buffer> ,m int main(int argc, char* argv[]){<Enter>}<Esc>O
@@ -301,6 +330,8 @@ augroup cppgroup
 	autocmd!
 	autocmd FileType cpp inoremap <buffer> ,m int main(int argc, char* argv[]){<Enter>}<Esc>O
 	autocmd FileType cpp iabbrev <buffer> s_ size_t
+	autocmd FileType cpp nnoremap <leader>r I#f/r wi"A"==
+	autocmd FileType linguafranca nnoremap <leader>r I#f/r wi"A"==
 augroup END
 
 " Python specifics
@@ -315,6 +346,12 @@ function! CheckSpecialCommand()
 	let s:command = substitute(getline(2), "^#\s*", "", "")
 	execute "!".s:command
 endfunction
+
+" Lingua Franca
+augroup lfgroup
+  " surround with '='
+  autocmd FileType linguafranca let b:surround_61 = "{=\r=}"
+augroup END
 
 " Rust specifics
 let g:rust_fold = 1
@@ -377,6 +414,9 @@ command! New silent call New(<q-mods>)
 cnoremap <C-j> <Down>
 cnoremap <C-k> <Up>
 
+" TODO find a good way to insert non greedy * in command line
+" cabbrev nongreedy \{-}
+
 function HlSearch()
   if &hlsearch
     set nohlsearch
@@ -406,10 +446,10 @@ function! Get_visual_selection()
     return join(lines, "\n")
 endfunction
 
-function! SearchVisualSelection()
-  let l:vis_select = Get_visual_selection()
-  return "/".l:vis_select
-endfunction
+" function! SearchVisualSelection()
+"   let l:vis_select = Get_visual_selection()
+"   return "/".l:vis_select
+" endfunction
 
 " vnoremap / /<c-r>=Get_visual_selection()
 " vnoremap <expr> / SearchVisualSelection()
@@ -472,3 +512,14 @@ augroup END
 " jedi-vi
 let g:jedi#popup_on_dot = 0
 let g:jedi#completions_command = ''
+
+luafile ~/.config/nvim/lua_config.lua
+" nnoremap <Space>rn :lua vim.lsp.buf.rename()<cr>
+
+command! -nargs=1 CheckWords 
+      \ vimgrep "\c\(\<we\>\|\<our\>\|couldn't\|isn't\|can't\|weren't\|woudln't\|didn't\|haven't\|don't\)" <args>
+command! -nargs=1 CheckFigures vimgrep '\c[^{\\]\<\(section\|figure\|listing\)\>' <args>
+
+let g:gruvbox_improved_warnings = 1
+
+command! Date put = strftime(\"%A %d %B %Y\")
