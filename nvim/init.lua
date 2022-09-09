@@ -24,11 +24,15 @@ require('packer').startup(function()
 		requires = { {'nvim-lua/plenary.nvim'} }
 	}
 
+	use 'tpope/vim-fugitive'
+
 end)
 
 require('snippets')
 
-vim.cmd 'language C'
+-- TODO
+-- play with 'tabline' to remove this awful X
+-- see :h setting-tabline
 
 vim.opt.showcmd = true
 vim.opt.incsearch = true
@@ -60,7 +64,7 @@ vim.opt.mouse = 'n'
 vim.opt.foldcolumn = '1'
 vim.opt.showbreak = '˪'
 vim.opt.background = 'dark'
-vim.opt.statusline = '%m %= %f %= %y %r'
+vim.opt.statusline = '%m %= %f %= %y %r %{FugitiveStatusline()}'
 
 vim.opt.listchars = {
 	tab = '▸ ',
@@ -81,12 +85,24 @@ vim.opt.wildignore = {
 vim.keymap.set('n', 'L', function() vim.cmd 'bnext' end)
 vim.keymap.set('n', 'H', function() vim.cmd 'bprevious' end)
 
+vim.keymap.set('n', ']]', function() vim.cmd 'tabnext' end)
+vim.keymap.set('n', '[[', function() vim.cmd 'tabprevious' end)
+
 vim.keymap.set('n', '<C-h>', '<C-w>h')
 vim.keymap.set('n', '<C-j>', '<C-w>j')
 vim.keymap.set('n', '<C-k>', '<C-w>k')
 vim.keymap.set('n', '<C-l>', '<C-w>l')
 
--- vim.keymap.set('n', 'gsd', "")
+vim.keymap.set('n', 's', ':%s/')
+vim.keymap.set('n', 'S', ':s/')
+
+-- Paste and indent what's been pasted
+vim.keymap.set('n', ']p', "p'[=']")
+
+-- Always stays on the same column when centering the screen
+vim.keymap.set('n', 'z.', 'zz')
+
+vim.keymap.set('i', '<C-a>', '<Esc>A')
 
 local qfWrapper = function(goingUp)
 	if next(vim.fn.getqflist()) then
@@ -166,6 +182,23 @@ end
 
 vim.keymap.set('n', '<BS>', QuickFixToggle)
 
+-- Files with views
+local viewfiles = {
+}
+vim.api.nvim_create_autocmd("BufWinLeave", {
+	pattern = viewfiles,
+	-- command = "mkview"
+	callback = function()
+		if not vim.opt.diff then
+			vim.cmd.mkview()
+		end
+	end
+})
+vim.api.nvim_create_autocmd("BufWinEnter", {
+	pattern = viewfiles,
+	command = "silent! loadview"
+})
+
 -------------
 -- Appearance
 -------------
@@ -174,6 +207,10 @@ vim.cmd 'colorscheme gruvbox'
 ---------------------
 -- Language specifics
 ---------------------
+
+-- TODO Handle binaries
+-- cf :h hex-editing and :h OptionSet
+
 local gitcommit_id = vim.api.nvim_create_augroup('gitcommit_group', {})
 vim.api.nvim_create_autocmd("FileType", {
 	pattern = 'gitcommit',
@@ -260,10 +297,11 @@ require('telescope').setup{
 	}
 }
 -- Telescope remappings
-local opts = {
-	search_dirs = {'src', 'include', 'docs', 'tests', 'tools'}
-}
-vim.keymap.set('n', '<C-f>', function() require('telescope.builtin').find_files(opts) end)
+-- local opts = {
+-- 	search_dirs = {'src', 'include', 'docs', 'tests', 'tools'}
+-- }
+-- vim.keymap.set('n', '<C-f>', function() require('telescope.builtin').find_files(opts) end)
+vim.keymap.set('n', '<C-f>', require('telescope.builtin').find_files)
 vim.keymap.set('n', '<C-g>', require('telescope.builtin').live_grep)
 
 -- LSP
@@ -292,10 +330,15 @@ if lsp_enabled then
 		vim.keymap.set('n', '<space>wl', function() print(vim.inspect(vim.lsp.buf.list_workspace_folders())) end, opts)
 		vim.keymap.set('n', '<space>D', vim.lsp.buf.type_definition, opts)
 		vim.keymap.set('n', '<space>rn', vim.lsp.buf.rename, opts)
-		vim.keymap.set('n', '<space>ca', function() vim.lsp.buf.code_action({includeDeclaration = false}) end, opts)
+		-- vim.keymap.set('n', '<space>ca', function() vim.lsp.buf.code_action({includeDeclaration = false}) end, opts)
 		vim.keymap.set('n', 'gr', vim.lsp.buf.references, opts)
 		vim.keymap.set('n', '<space>f', vim.lsp.buf.formatting, opts)
+		vim.keymap.set('n', '\\', vim.diagnostic.open_float, opts)
+
+		vim.keymap.set('n', '<space>gd', function()vim.cmd 'vsp';vim.lsp.buf.definition() end, opts)
 	end
+
+	-- TODO mapping for definition in new window
 
 	-- Use a loop to conveniently call 'setup' on multiple servers and
 	-- map buffer local keybindings when the language server attaches
@@ -307,3 +350,22 @@ if lsp_enabled then
 		}
 	end
 end
+
+-- VimTeX options
+vim.g.vimtex_view_method = 'zathura'
+vim.g.vimtex_compiler_latexmk = {
+     build_dir = 'out',
+     callback = 1,
+     continuous = 1,
+     executable = 'latexmk',
+     hooks = {},
+     options = {
+	'-verbose',
+	'-file-line-error',
+	'-synctex=1',
+	'-interaction=nonstopmode',
+	}
+    }
+
+
+vim.g.do_filetype_lua = 1

@@ -9,15 +9,6 @@ xnoremap <silent> il :<C-u>execute "normal!_vg_"<cr>
 
 nnoremap gF <C-w><C-f><C-w>L
 
-" Miscellaneous remapping
-inoremap <C-a> <Esc>A
-
-" Turns out the following isn't the default behaviour of ]p !
-nnoremap ]p p'[=']
-
-" Always stays on the same column when redrawing the screen
-nnoremap z. zz
-
 " Create a view when quiting a file and loading it when entering back
 augroup viewgroup
 	autocmd!
@@ -34,8 +25,6 @@ augroup mailcommand
 augroup END
 
 nnoremap <Leader>s :%s/\<<C-r><C-w>\>/
-nnoremap s :%s/
-nnoremap S :s/
 " TODO: quelque chose comme ça
 "command! -nargs=1 Swap normal!:s/^\(.*\)<q-args>\(.*\)$/\2<q-args>\1/
 
